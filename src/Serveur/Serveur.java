@@ -13,13 +13,13 @@ import java.net.Socket;
 public class Serveur {
 
 	static int nbClients = 0;
-	static Pipe[] threads = new Pipe[4];
+	static Pipe[] threads ;;
 	
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
 		
-		if (args.length != 1)
-			System.err.println("Mauvais nombre d'arguments !\n\tUsage : serveur port");
+		if (args.length != 2)
+			System.err.println("Mauvais nombre d'arguments !\n\tUsage : serveur port nbJoueurs");
 		
 		// Démarrage
 		try {
