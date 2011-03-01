@@ -11,7 +11,11 @@ public class TestReseau {
 		Jeu jeu = new Jeu(2);
 		Reseau reseau = new Reseau("localhost", 4242, jeu);
 
+		reseau.envoyerNom("Pierre-Hugues Husson");
 		
+		System.out.println("Liste des joueurs");
+		reseau.recupererJoueurs();
+		for (String s : reseau.getJoueurs());
 	}
 
 }

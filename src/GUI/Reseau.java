@@ -9,14 +9,15 @@ import java.net.UnknownHostException;
 import java.util.Observable;
 
 import Jeu.Jeu;
-import Serveur.Pipe;
 
 public class Reseau extends Observable{
-	private BufferedReader in;	// Socket en lecture
-	private PrintWriter out;	// Socket en ecriture
-	private int joueur;			// Numéro du joueur
-	private String[] joueurs;	// Liste des joueurs
-	private String nom;			// Nom du joueur
+	private BufferedReader in;			// Socket en lecture
+	private PrintWriter out;			// Socket en ecriture
+	private int joueur;					// Numéro du joueur
+	private String[] joueurs;			// Liste des joueurs
+	private String nom;					// Nom du joueur
+	private Jeu jeu;					// Instance de jeu
+	private ControleurReseau controleur;// Controleur du chat	
 	
 	/**
 	 * Constructeur
@@ -24,23 +25,24 @@ public class Reseau extends Observable{
 	 * @param port	Port sur lequel on veut se connecter
 	 * @param jeu	Instance Jeu du client
 	 */
-	public Reseau(String host, int port, Jeu jeu) {
+	public Reseau(String host, int port, Jeu jeu, String nom) throws Exception {
+		this.nom = nom;
 		Socket connexion = null;
 		try {
 			connexion = new Socket(host, port);
 		} catch (UnknownHostException e) {
 			System.err.println("Machine inconnue ou port occupé : " + host + ":" + port);
-			System.exit(-1);
+			throw e;
 		} catch (IOException e) {
 			System.err.println("Connexion impossible au serveur");
-			System.exit(-1);
+			throw e;
 		}
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(connexion.getInputStream()));
 			PrintWriter out = new PrintWriter(connexion.getOutputStream(), true);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.exit(-1);
+			throw new Exception();
 		}
 		
 		// Thread de lecture
@@ -55,7 +57,7 @@ public class Reseau extends Observable{
 						e.printStackTrace();
 					}								
 			}
-		});
+		});				
 	}
 	/**
 	 * Fonction qui gère les informations reçues du serveur
@@ -75,17 +77,37 @@ public class Reseau extends Observable{
 				System.out.println("->Le serveur demande mon nom");
 				envoyerNom(nom);				
 				break;
-			// MUR
+			// MURH
 			case(4):
+				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur horizontal en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
+				if (args.length == 4)
+					jeu.mur(Integer.parseInt(args[1]), false, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+				else
+					throw new Exception();
 				break;
-				
+			// MURV
+			case(5):
+				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur vertical en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
+				if (args.length == 4)
+					jeu.mur(Integer.parseInt(args[1]), true, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+				else
+					throw new Exception();
+				break;
+			// DEPLACER
+			case(6):
+				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " se déplace en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
+				if (args.length == 4)
+					jeu.deplacer(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+				else
+					throw new Exception();
+				break;
 			// Quitter
 			case(7):
 				System.out.println("->Le serveur quitte !");
 				System.exit(-1);
 			// Chat
 			case(8):
-				System.out.println(req.substring(2));				
+				controleur.ecrire(req.substring(2));
 				break;
 			// Liste joueurs
 			case(10):
@@ -94,7 +116,7 @@ public class Reseau extends Observable{
 			default:
 				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));
 			}
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			System.err.println("->Requête invalide : " + req);
 		}
 		
@@ -105,14 +127,20 @@ public class Reseau extends Observable{
 	 * @param nom	Nom à envoyer
 	 * @return		Retourne false si il y a une erreur
 	 */
-	public boolean envoyerNom(String nom) {
+	public void envoyerNom(String nom) {
 		out.println("3 " + nom);
 	}
 	
+	/**
+	 * Envoie la requête pour récupérer la liste des joueurs
+	 */
 	public void recupererJoueurs() {
 		out.println("10");
 	}
 	
+	/**
+	 * Envoie la requête pour récupérer son numéro sur le serveur
+	 */
 	public void recupererJoueur() {
 		out.println("11");
 	}
@@ -140,20 +168,9 @@ public class Reseau extends Observable{
 	 * @param sens   Sens du mur : vertical=true, horizontal=false
 	 * @param x		 Abscisse du coin haut gauche
 	 * @param y		 Ordonnée du coin haut gauche
-	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
 	 */
-	public boolean mur(boolean sens, int x, int y) {
-		
-		return true;
-	}
-	
-	/**
-	 * Test si la partie est finie
-	 * @return 		 Renvoie le numéro du joueur gagnant ou 0 si la partie est en cours
-	 */
-	public int victoire() {
-		
-		return 0;
+	public void mur(boolean sens, int x, int y) {
+		out.println((sens ? "5" : "4") + " " + x + " " + y);
 	}
 	
 	/** Renvoit le numéro du joueur
@@ -176,5 +193,13 @@ public class Reseau extends Observable{
 	 */
 	public void signalerFin() {
 		out.println("7");
+	}
+	
+	public void chat(String texte) {
+		out.println("3 " + texte);
+	}
+	
+	public void setControleur(ControleurReseau controleur) {
+		this.controleur = controleur;
 	}
 }

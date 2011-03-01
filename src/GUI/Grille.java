@@ -1,6 +1,8 @@
 package GUI;
 
 import javax.swing.JPanel;
+
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Color;
 //import java.awt.BorderLayout;
@@ -14,8 +16,9 @@ public class Grille extends JPanel {
 	public Grille() {
 		JPanel grille = new JPanel();
 		grille.setBackground(Color.WHITE);
+		this.setSize(new Dimension(360, 360));
 		//setLayout(new BorderLayout(0,0));
-		grille.setLocation(50,50);
+		//grille.setLocation(50,50);
 	}
 	
 	public void paintComponent (Graphics g) {

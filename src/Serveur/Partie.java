@@ -13,6 +13,7 @@ public class Partie extends Thread {
 	private int nb = 0;
 	private int courant = 1;
 	private Jeu jeu;
+	private boolean partie = false;
 	
 	public Partie(int nbclients) {
 		this.nbClients = nbclients;
@@ -34,18 +35,32 @@ public class Partie extends Thread {
 		new ServeurThread(client, threads[nb]).start();		
 		nb++;
 		
+		// Avant le début de partie
+		Thread attente = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true)
+					for (int i = 1 ; i <= nb ; i++)
+						if (i != courant)
+							requete(threads[i - 1].serveur.tryGetMessage(2000), 0, i);											
+			}
+		});		
+		
+		// Premier joueur
+		if (nb == 1)
+			attente.start();
+		
 		// Début de la partie
-		if (nb == nbClients)
+		if (nb == nbClients) {
+			attente.stop();
 			this.start();
+		}			
 	}
 	
 	// Partie
 	@Override
 	public void run() {
-		// Demande des noms
-		for (Pipe b : threads)
-			b.client.setMessage("3");
-				
+		
 		// Affichage des joueurs
 		System.out.println("Début de partie\n\tJoueurs :");
 		for (String s : clients)
@@ -73,14 +88,7 @@ public class Partie extends Thread {
 						
 			// Changement de joueur
 			courant = courant % nbClients + 1;			
-			
-			try {
-				this.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		}			
 	}
 	
 	public boolean requete(String req, int cmd, int joueur) {
