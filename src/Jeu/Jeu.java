@@ -4,6 +4,8 @@
 
 package Jeu;
 
+private ArrayList<Joueur> listeJoueurs= new ArrayList<Joueur>;
+
 public class Jeu {
 	
 	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
