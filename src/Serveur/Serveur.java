@@ -18,6 +18,8 @@ public class Serveur {
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
 		
+		System.out.println(args);
+		
 		// Démarrage
 		try {
 			serverSocket = new ServerSocket(4242);
