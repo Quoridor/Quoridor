@@ -3,18 +3,19 @@ package GUI;
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Color;
-//import java.
+//import java.awt.BorderLayout;
 
 
 public class Grille extends JPanel {
 	
-	final int tailleCase = 30; //à modifier
+	final int tailleCase = 40; //à modifier
 	static final long serialVersionUID = 1;
 	
 	public Grille() {
-		//JPanel grille = new JPanel();
-		//grille.setLayout(new BorderLayout, CENTER);
-
+		JPanel grille = new JPanel();
+		grille.setBackground(Color.WHITE);
+		//setLayout(new BorderLayout(0,0));
+		grille.setLocation(50,50);
 	}
 	
 	public void paintComponent (Graphics g) {
@@ -23,10 +24,10 @@ public class Grille extends JPanel {
 
 	private void drawGrille (Graphics g) {
 		g.setColor(Color.BLACK);
-		for (int i= 1; i < 10; i++) {
-			g.drawLine(0, i*tailleCase, 9*tailleCase, i*tailleCase);			
-			g.drawLine(i*tailleCase, 0, i*tailleCase, 9*tailleCase);
-		}	
+		for (int i= 1; i < 11; i++) {
+			g.drawLine(tailleCase, i*tailleCase, 10*tailleCase, i*tailleCase);			
+			g.drawLine(i*tailleCase, tailleCase, i*tailleCase, 10*tailleCase);
+		}
 	}
 	
 }
