@@ -2,6 +2,11 @@ package Serveur;
 
 public class BoiteAuxLettres {
 	protected String message = null;
+	public int num;
+	
+	public BoiteAuxLettres(int num) {
+		this.num = num;
+	}
 
 	public synchronized void setMessage(String message) {
 		if (message != null) {
@@ -14,6 +19,7 @@ public class BoiteAuxLettres {
 			this.message = message;
 			notifyAll();
 		}
+		System.out.println("Ajout de '" + message + "' à la boite " + num);
 	}
 
 	public synchronized String getMessage() {
@@ -26,6 +32,7 @@ public class BoiteAuxLettres {
 		String resultat = message;
 		message = null;
 		notifyAll();
+		System.out.println("Lecture de '" + resultat + "' dans la boite " + num);
 		return resultat;
 	}
 }
