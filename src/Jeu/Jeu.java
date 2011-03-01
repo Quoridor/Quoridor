@@ -18,16 +18,24 @@ public class Jeu {
 		this.nbJoueur=nbJoueur;
 	
 		for(int i=0 ; i<9 ; i++)
-		{ 
-			for(int j ; j<9 ; j++)
-			{ if(i==0) 
-			tabCase[i][j].gauche = null;
+		{ for(int j=0 ; j<9 ; j++)
+		{ if(j==0) 
+			tabCase[i][j].setGauche(null);
 		else 
-			tabCase[i-1][j].gauche;
-			if(i==8)
-			tabCase[i][j].gauche = null;
+			tabCase[i][j].setGauche( new Arete(tabCase[i][j] , tabCase[i][j-1])) ;
+		if(j==8)
+			tabCase[i][j].setGauche(null);
 		else
-			tabCase[i-1][j].gauche
+			tabCase[i][j].setGauche (new Arete(tabCase[i][j] , tabCase[i][j+1]));
+		if(i==0) 
+			tabCase[i][j].setHaut(null);
+		else 
+			tabCase[i][j].setHaut( new Arete(tabCase[i][j] , tabCase[i-1][j])) ;
+		if(i==8)
+			tabCase[i][j].setBas(null);
+
+		else
+			tabCase[i][j].setBas (new Arete(tabCase[i][j] , tabCase[i+1][j]));
 		}
 		}
 	
