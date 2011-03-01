@@ -16,7 +16,7 @@ public class Jeu {
 		this.nbJoueur=nbJoueur;
 	
 		for(int i=0 ; i<9 ; i++)
-		{ for(int j ; j<9 ; j++)
+		{ for(int j=0 ; j<9 ; j++)
 		{ if(j==0) 
 			tabCase[i][j].setGauche(null);
 		else 
