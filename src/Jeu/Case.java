@@ -8,11 +8,17 @@ public class Case {
 	
 	private int pion=0;
 	private Arete gauche, droite, haut, bas ; /* tableau des aretes adjacentes */
+	private int marque=0;
 	
 	
 	
+	public void setMarque ( int n){
+		this.marque=n;
+	}
 	
-	
+	public int getMarque(){
+		return this.marque;
+	}
 	
 	
 	public void setPion ( int joueur){
