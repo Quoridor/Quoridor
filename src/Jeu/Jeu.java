@@ -1,14 +1,16 @@
+package Jeu;
+
+import java.util.ArrayList;
+
 /**
  * Cette classe gère toute la logique du jeu et permet de respecter les règles
  */
 
-package Jeu;
-
-private ArrayList<Joueur> listeJoueurs= new ArrayList<Joueur>;
-
 public class Jeu {
 	
+	private ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>();
 	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
+
 	private Case[][] tabCase= new Case[9][9] ;
 	
 	
@@ -16,15 +18,24 @@ public class Jeu {
 		this.nbJoueur=nbJoueur;
 	
 		for(int i=0 ; i<9 ; i++)
-		{ for(int j ; j<9 ; j++)
-		{ if(i==0) 
-			tabCase[i][j].gauche = null;
+		{ for(int j=0 ; j<9 ; j++)
+		{ if(j==0) 
+			tabCase[i][j].setGauche(null);
 		else 
-			tabCase[i-1][j].gauche;
-		if(i==8)
-			tabCase[i][j].gauche = null
+			tabCase[i][j].setGauche( new Arete(tabCase[i][j] , tabCase[i][j-1])) ;
+		if(j==8)
+			tabCase[i][j].setGauche(null);
 		else
-			tabCase[i-1][j].gauche
+			tabCase[i][j].setGauche (new Arete(tabCase[i][j] , tabCase[i][j+1]));
+		if(i==0) 
+			tabCase[i][j].setHaut(null);
+		else 
+			tabCase[i][j].setHaut( new Arete(tabCase[i][j] , tabCase[i-1][j])) ;
+		if(i==8)
+			tabCase[i][j].setBas(null);
+
+		else
+			tabCase[i][j].setBas (new Arete(tabCase[i][j] , tabCase[i+1][j]));
 		}
 		}
 	
@@ -40,9 +51,15 @@ public class Jeu {
 	
 	
 	
-	public boolean deplacer(int joueur, int x, int y) {
+	public boolean deplacer(int numeroJoueur, int x, int y) {
+		int i=0, j=0 ;
 		/* convertir x y en ij valables */
-		laCase = tabCase[i][j];
+		
+		Joueur joueur = this.listeJoueurs.get(numeroJoueur-1);
+		Case caseArrivee = tabCase[i][j];
+		Case caseDepart = joueur.getPosition();
+		
+		
 		
 		return  true;
 	}
@@ -58,8 +75,12 @@ public class Jeu {
 	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
 	 */
 	public boolean mur(int joueur, boolean sens, int x, int y) {
-		laCase = tabCase[x][y];
-		larete = laCase.get
+		Case laCase = tabCase[x][y];
+		Arete larete;
+		
+		if(sens == true)
+		larete = laCase.getHaut();
+		else larete = laCase.getDroite();
 		
 		return true;
 	}
@@ -72,5 +93,13 @@ public class Jeu {
 		
 		return 0;
 	}	
+	
+	public Case[][] getTabCase() {
+		return tabCase;
+	}
+
+	public void setTabCase(Case[][] tabCase) {
+		this.tabCase = tabCase;
+	}
 
 }
