@@ -102,6 +102,10 @@ public class Jeu {
 		this.tabCase = tabCase;
 	}
 
+	public ArrayList<Joueur> getListeJoueurs (){
+		return this.listeJoueurs;
+		
+	}
 
 
 	public static void main(String[] argv){
