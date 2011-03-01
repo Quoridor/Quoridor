@@ -8,32 +8,43 @@ import java.net.Socket;
 
 
 public class ServeurThread extends Thread {
-	private Socket client;
+	private BufferedReader in;
+	private PrintWriter out;
 	private Pipe pipe;
 
 	public ServeurThread(Socket client, Pipe pipe) {
-		this.client = client;
+		try {
+			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			out = new PrintWriter(client.getOutputStream(), true);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.pipe = pipe;
 	}
 
 	@Override
-	public void run() {
-		try {
-			System.out.println(getName() + " lancé...");
-			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-
-			// Communication avec le client
-			while(true) {
-				// Envoi des données
-				out.println(this.pipe.in.readLine());
-				// Récupération de la commande du client
-				this.pipe.out.println(in.readLine());				
-			}				
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println(getName() + " : client déconnecté");
+	public void run() {		
+		
+		// Thread de lecture
+		Thread lecture = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true)
+					try {
+						if (in.ready())
+							pipe.serveur.setMessage(in.readLine());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}								
+			}
+		});
+		
+		lecture.start();
+		
+		// Ecriture
+		System.out.println("Thread N°" + pipe.serveur.num + " lancé...");
+		// Envoi des données
+		while (true)			
+			out.println(pipe.client.getMessage());
 	}
 }

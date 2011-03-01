@@ -50,74 +50,27 @@ public class Serveur {
 				System.err.println("Connexion avec le client impossible");
 			}
 		}
-		while(true);
-		
+		while(true);		
 	}
+}
+class Pipe {
+	public BALTimeOut client;
+	public BALTimeOut serveur;
 	
-	static public void mainLoop() {
-		String buf;
-		System.out.println("Début de partie");
-		try {
-			while (true) {
-				for (int i = 0 ; i < nbClients ; i++) {
-					// Si un thread a écrit dans le pipe
-					if (threads[i].in.ready()) {
-						// Parsage de la requête
-						String[] args = threads[i].in.readLine().split(" ");
-
-						// Si la requête a au moins une partie
-						if ((args.length > 0)) {
-							try {
-								// Récupération du numéro de requête
-								int cmd = Integer.parseInt(args[0]);
-														
-								// Gestion de la requete
-								requete(cmd, args, i);									
-							}						
-							catch (NumberFormatException e) {
-								System.err.println("Thread " + i +  " : requête invalide !");
-							}
-						}
-					}
-				}
-			}
-		} catch (IOException e) {
-			System.err.println("Connexion avec les threads impossible");
-		}
-	}
-	
-	static public void requete(int cmd, String[] args, int thread) {
-		switch (cmd) {
-			// NOM
-			case(3):
-				if (args.length > 1) {
-					String name = args[1];
-					System.out.println("Thread " + thread + " : Le client donne son nom : " + name);
-				}
-				return;
-			// Quitter
-			case(7):
-				System.out.println("Thread " + thread + " : Le client quitte");
-				System.exit(-1);
-				return;
-			// Echo
-			case(9):
-				threads[thread].out.println("Echo : " + args[0]);
-				threads[thread].notify();
-				return;
-			default:
-				System.err.println("Numéro de requête invalide : " + cmd);
-		}
+	public Pipe(int nb) {
+		client = new BALTimeOut(nb);
+		serveur = new BALTimeOut(nb);
 	}
 }
 
-class Pipe extends Observable {
+	
+/*class Pipe {
 	public PrintWriter out;
 	public BufferedReader in;
 	
-	/**
-	 * Crée un pipe "normal" dans le sens où les extrémités sont vraiment dans le même pipe
-	 */
+	
+	 Crée un pipe "normal" dans le sens où les extrémités sont vraiment dans le même pipe
+	 
 	public Pipe() {
 		try {
 			PipedWriter tmp = new PipedWriter();
@@ -127,14 +80,14 @@ class Pipe extends Observable {
 			e.printStackTrace();
 		}
 	}
-	/**
-	 * Crée un faux pipe pour gérer un connexion bidirectionelle via 2 pipes mais seuls un des
-	 * cotés de chaque pipe intéresse chaque thread 
-	 */
+	
+	 Crée un faux pipe pour gérer un connexion bidirectionelle via 2 pipes mais seuls un des
+	 cotés de chaque pipe intéresse chaque thread 
+	 
 	public Pipe(PrintWriter out, BufferedReader in) {
 		this.out = out;
 		this.in = in;
 	}
-}
+}*/
 
 
