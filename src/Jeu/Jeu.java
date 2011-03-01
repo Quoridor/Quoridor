@@ -11,10 +11,18 @@ public class Jeu {
 	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
 	private Case[][] tabCase= new Case[9][9] ;
 	
+	
 	public Jeu(int nbJoueur) {
 		this.nbJoueur=nbJoueur;
 	
-		for(int i=0 , )
+		for(int i=0 ; i<9 ; i++)
+		{ for(int j ; j<9 ; j++)
+		{ if(i==0) tabCase[i][j].gauche = null;
+		else tabCase[i-1][j].gauche;
+		if(i==8) tabCase[i][j].gauche = null
+		else tabCase[i-1][j].gauche
+		}
+		}
 	
 	}
 	
