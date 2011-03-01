@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+
 public class ServeurThread extends Thread {
 	private Socket client;
 	private Pipe pipe;
@@ -22,14 +23,33 @@ public class ServeurThread extends Thread {
 			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 
-			// Test d'écriture dans le pipe
-			for (int i = 0 ; i < 10 ; i++) {
-				pipe.out.println(getName() + " c'est moi pour la " + i + " fois");
-				String buf = pipe.in.readLine();
-				
-				System.out.println(getName() + " : " + buf);
+			// Communication avec le client
+			String inputLine = in.readLine();
+			while(inputLine != null) {
+				// Récupération de la commande
+				String[] args = inputLine.split(" ");
+				if ((args.length > 0)) {
+					try {
+					int cmd = Integer.parseInt(args[0]);
+												
+					switch (cmd) {
+					// NOM
+					case(3):
+						if (args.length > 1)
+							System.out.println(getName() + " : le client donne son nom : " + args[1]);
+					}
+					}
+					catch (NumberFormatException e) {
+						System.err.println(getName() + " : requête invalide !");
+					}
+					inputLine = in.readLine();
+				}
 			}
 			
+			// Test d'écriture dans le pipe
+			pipe.out.println(getName() + " c'est moi !");
+			String buf = pipe.in.readLine();
+			System.out.println(getName() + " : " + buf);
 			
 			/*String inputLine = in.readLine();
 			while(inputLine!=null) {
