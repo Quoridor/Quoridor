@@ -4,6 +4,8 @@
 
 package Jeu;
 
+private ArrayList<Joueur> listeJoueurs= new ArrayList<Joueur>;
+
 public class Jeu {
 	
 	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
@@ -15,10 +17,14 @@ public class Jeu {
 	
 		for(int i=0 ; i<9 ; i++)
 		{ for(int j ; j<9 ; j++)
-		{ if(i==0) tabCase[i][j].gauche = null;
-		else tabCase[i-1][j].gauche;
-		if(i==8) tabCase[i][j].gauche = null
-		else tabCase[i-1][j].gauche
+		{ if(i==0) 
+			tabCase[i][j].gauche = null;
+		else 
+			tabCase[i-1][j].gauche;
+		if(i==8)
+			tabCase[i][j].gauche = null
+		else
+			tabCase[i-1][j].gauche
 		}
 		}
 	

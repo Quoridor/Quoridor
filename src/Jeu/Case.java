@@ -7,7 +7,10 @@ public class Case {
 	}
 	
 	private int pion;
-	private Arete[] TabAr = new Arete[4]; /* tableau des aretes adjacentes */
+	private Case gauche, droite, haut, bas ; /* tableau des aretes adjacentes */
+	
+	
+	
 	
 	
 }
