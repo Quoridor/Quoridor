@@ -27,11 +27,12 @@ public class Serveur {
 		try {
 			serverSocket = new ServerSocket(Integer.parseInt(args[0]));
 		} catch (IOException e) {
-			System.err.println("Impossible d'ouvrir le port 4242");
+			System.err.println("Impossible d'ouvrir le port " + args[0]);
 			System.exit(-1);
 		}
 		
 		nbClients = Integer.parseInt(args[1]);
+		threads = new Pipe[nbClients];
 		
 		System.out.println("Serveur démarré sur le port " + args[0]);
 		Socket clientSocket = null;
@@ -42,7 +43,7 @@ public class Serveur {
 				clientSocket = serverSocket.accept();
 				Pipe pipe1 = new Pipe(); // Thread -> Serveur
 				Pipe pipe2 = new Pipe(); // Serveur -> Thread
-				//threads[nb] = new Pipe(pipe1.out, pipe2.in);
+				threads[nb] = new Pipe(pipe1.out, pipe2.in);
 				
 				// Thread par client
 				new ServeurThread(clientSocket, new Pipe(pipe2.out, pipe1.in)).start();
@@ -52,12 +53,19 @@ public class Serveur {
 			}
 		}
 		
+		String buf;
+		
 		// Début de partie
 		try {
-			for (Pipe p : threads)
-				System.out.println(p.in.readLine());
-			for (Pipe p : threads)
-				p.out.println("Salut petit thread");
+			while (true) {
+				for (int i = 0 ; i < nbClients ; i++) {
+					if (threads[i].in.ready()) {
+						buf = threads[i].in.readLine();
+						System.out.println("Le joueur " + i + " : " + buf);
+						threads[i].out.println("echo" + buf);
+					}
+				}
+			}
 		} catch (IOException e) {
 			System.err.println("Connexion avec les threads impossible");
 		}

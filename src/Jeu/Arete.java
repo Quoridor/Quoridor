@@ -4,7 +4,7 @@ package Jeu;
 public class Arete {
  int joueur;
  Case depart;
- Case arrivee;
+ private Case arrivee;
 	
 	public Arete(Case depart , Case arrivee ){
 		this.depart=depart;
@@ -14,8 +14,17 @@ public class Arete {
 	
 	
 	
+	public Case getArrivee(){
+		if(this.joueur==0)
+			return this.arrivee;
+		else return null;
+	}
 	
-	
+	public Case getArriveePlus(){
+		
+			return this.arrivee;
+		
+	}
 	
 	
 	
