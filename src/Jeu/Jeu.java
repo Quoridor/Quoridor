@@ -19,7 +19,8 @@ public class Jeu {
 	
 		for(int i=0 ; i<9 ; i++)
 		{ for(int j=0 ; j<9 ; j++)
-		{ if(j==0) 
+		{ tabCase[i][j]=new Case();
+			if(j==0) 
 			tabCase[i][j].setGauche(null);
 		else 
 			tabCase[i][j].setGauche( new Arete(tabCase[i][j] , tabCase[i][j-1])) ;
