@@ -6,13 +6,11 @@ package Jeu;
 
 public class Jeu {
 	
-	/**
-	 * Constructeur
-	 * @param nbJoueur Le nombre de joueurs initial : 2 ou 4
+	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4
 	 */
+	
 	public Jeu(int nbJoueur) {
-		
-	}
+		this.nbJoueur=nbJoueur;}
 	
 	/**
 	 * Fonction de déplacement d'un joueur
@@ -22,6 +20,7 @@ public class Jeu {
 	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
 	 */
 	public boolean deplacer(int joueur, int x, int y) {
+		lacase = tabCase[x][y];
 		
 		return  true;
 	}
@@ -35,6 +34,7 @@ public class Jeu {
 	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
 	 */
 	public boolean mur(int joueur, boolean sens, int x, int y) {
+		lacase = tab
 		
 		return true;
 	}

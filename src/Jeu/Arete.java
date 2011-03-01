@@ -1,5 +1,4 @@
 package Jeu;
-import Case;
 
 
 public class Arete {
