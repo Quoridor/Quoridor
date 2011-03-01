@@ -21,7 +21,13 @@ public class Parcours {
 	
 
 	
-	
+	public void poseMur (Jeu jeu , boolean sens , int joueur , int i , int j){
+		if( sens==true)
+		{jeu.getTabCase()[i][j].getHaut().getArriveePlus().getDroite().joueur=joueur;
+		
+		
+		jeu.getTabCase()[i][j].getDroite().joueur=joueur; }
+	}
 	
 	
 	

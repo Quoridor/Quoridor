@@ -20,6 +20,11 @@ public class Arete {
 		else return null;
 	}
 	
+	public Case getArriveePlus(){
+		
+			return this.arrivee;
+		
+	}
 	
 	
 	
