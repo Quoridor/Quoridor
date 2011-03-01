@@ -23,7 +23,7 @@ public class Jeu {
 	 */
 	public boolean deplacer(int joueur, int x, int y) {
 		
-		return true;
+		return  true;
 	}
 	
 	/**
