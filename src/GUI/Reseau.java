@@ -6,12 +6,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Observable;
 
 import Jeu.Jeu;
+import Serveur.Pipe;
 
-public class Reseau {
-	private BufferedReader in;
-	private PrintWriter out;
+public class Reseau extends Observable{
+	private BufferedReader in;	// Socket en lecture
+	private PrintWriter out;	// Socket en ecriture
+	private int joueur;			// Numéro du joueur
+	private String[] joueurs;	// Liste des joueurs
+	private String nom;			// Nom du joueur
+	
 	/**
 	 * Constructeur
 	 * @param host	Adresse du serveur
@@ -36,6 +42,62 @@ public class Reseau {
 			e.printStackTrace();
 			System.exit(-1);
 		}
+		
+		// Thread de lecture
+		Thread lecture = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true)
+					try {
+						if (in.ready())
+							requete(in.readLine());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}								
+			}
+		});
+	}
+	/**
+	 * Fonction qui gère les informations reçues du serveur
+	 * @param req Requete reçue
+	 */
+	private void requete(String req) {
+		if (req == null)
+			return;
+		
+		// Séparation des valeurs
+		String[] args = req.split(" ");
+		
+		try {
+			switch (Integer.parseInt(args[0])) {
+			// Envoyer son nom
+			case(3):
+				System.out.println("->Le serveur demande mon nom");
+				envoyerNom(nom);				
+				break;
+			// MUR
+			case(4):
+				break;
+				
+			// Quitter
+			case(7):
+				System.out.println("->Le serveur quitte !");
+				System.exit(-1);
+			// Chat
+			case(8):
+				System.out.println(req.substring(2));				
+				break;
+			// Liste joueurs
+			case(10):
+				joueurs = req.substring(2).split(";");
+				break;
+			default:
+				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));
+			}
+		} catch (NumberFormatException e) {
+			System.err.println("->Requête invalide : " + req);
+		}
+		
 	}
 	
 	/**
@@ -44,18 +106,15 @@ public class Reseau {
 	 * @return		Retourne false si il y a une erreur
 	 */
 	public boolean envoyerNom(String nom) {
-		out.println("NOM " + nom);
-		try {
-			if (in.readLine().equals("OK"))		
-				return true;
-		} catch (IOException e) {			
-			e.printStackTrace();
-		}
-		return false;
+		out.println("3 " + nom);
 	}
 	
 	public void recupererJoueurs() {
 		out.println("10");
+	}
+	
+	public void recupererJoueur() {
+		out.println("11");
 	}
 	
 	/**
@@ -101,9 +160,21 @@ public class Reseau {
 	 * @return		 Numéro du joueur
 	 */
 	public int getJoueur() {
-		return 1;
+		return joueur;
 	}
 	
+	/**
+	 * Renvoit la liste des joueurs
+	 * @return
+	 */
+	public String[] getJoueurs() {
+		return joueurs;
+	}
 	
-
+	/**
+	 * Signale au serveur que l'on quitte
+	 */
+	public void signalerFin() {
+		out.println("7");
+	}
 }

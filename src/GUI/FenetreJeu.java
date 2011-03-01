@@ -21,14 +21,14 @@ public class FenetreJeu extends JFrame {
 		fenetreJeu.setLocation((largeurEcran - largeurFenetre)/2, (hauteurEcran - hauteurFenetre)/2);
 		fenetreJeu.setVisible(true);
 		//fenetreJeu.setContentPane(new Grille());
-<<<<<<< HEAD
+
 		fenetreJeu.add(new Curseur());
 		fenetreJeu.pack();
 		fenetreJeu.setDefaultCloseOperation(EXIT_ON_CLOSE);
-=======
-		fenetreJeu.add(new Grille());
+
+		//fenetreJeu.add(new Grille());
 		//fenetreJeu.pack();
->>>>>>> 1740c2d2464fe908f6b8154f86cc7df339b59ef5
+
 		
 	}
 }
