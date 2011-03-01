@@ -13,14 +13,16 @@ import java.net.Socket;
 public class Serveur {
 
 	static int nbClients = 0;
-	static Pipe[] threads ;;
+	static Pipe[] threads ;
+	static int nb = 0;
 	
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
 		
-		if (args.length != 2)
+		if (args.length != 2) {
 			System.err.println("Mauvais nombre d'arguments !\n\tUsage : serveur port nbJoueurs");
-		
+			System.exit(-1);
+		}
 		// Démarrage
 		try {
 			serverSocket = new ServerSocket(Integer.parseInt(args[0]));
@@ -29,22 +31,28 @@ public class Serveur {
 			System.exit(-1);
 		}
 		
+		nbClients = Integer.parseInt(args[1]);
+		
 		System.out.println("Serveur démarré sur le port " + args[0]);
 		Socket clientSocket = null;
 		
 		// Attente des clients
-		while (nbClients < 2) {
+		while (nb < nbClients) {
 			try {
 				clientSocket = serverSocket.accept();
 				Pipe pipe1 = new Pipe(); // Thread -> Serveur
 				Pipe pipe2 = new Pipe(); // Serveur -> Thread
-				threads[nbClients] = new Pipe(pipe1.out, pipe2.in);
+				//threads[nb] = new Pipe(pipe1.out, pipe2.in);
+				
+				// Thread par client
 				new ServeurThread(clientSocket, new Pipe(pipe2.out, pipe1.in)).start();
-				nbClients++;
+				nb++;
 			} catch (IOException e) {
 				System.err.println("Connexion avec le client impossible");
 			}
 		}
+		
+		// Début de partie
 		try {
 			for (Pipe p : threads)
 				System.out.println(p.in.readLine());
