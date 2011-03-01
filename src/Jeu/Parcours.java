@@ -4,7 +4,7 @@ public class Parcours {
 
 	
 	public void marquage ( Case c){
-		c.setMarque(1);
+		c.setMarque(true);
 		
 		if ( c.getGauche()!=null && c.getGauche().arrivee!=null)
 			marquage(c.getGauche().arrivee);
@@ -29,7 +29,7 @@ public class Parcours {
 		
 		for(int i=0 ; i<9 ; i++)
 		{ for(int j=0 ; j<9 ; j++)
-			jeu.getTabCase()[i][j].setMarque(0);
+			jeu.getTabCase()[i][j].setMarque(false);
 		}
 		
 		

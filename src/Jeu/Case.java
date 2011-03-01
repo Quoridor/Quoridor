@@ -8,15 +8,15 @@ public class Case {
 	
 	private int pion=0;
 	private Arete gauche, droite, haut, bas ; /* tableau des aretes adjacentes */
-	private int marque=0;
+	private boolean marque=false;
 	
 	
 	
-	public void setMarque ( int n){
-		this.marque=n;
+	public void setMarque ( boolean b){
+		this.marque=b;
 	}
 	
-	public int getMarque(){
+	public boolean getMarque(){
 		return this.marque;
 	}
 	
