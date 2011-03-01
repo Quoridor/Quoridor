@@ -19,6 +19,9 @@ public class Parcours {
 	}
 	
 	
+	/* public boolean testAcces ( Jeu jeu,Joueur joueur) */
+	
+	
 
 	
 	public void poseMur (Jeu jeu , boolean sens , int joueur , int i , int j){
@@ -53,6 +56,10 @@ public class Parcours {
 	
 	
 	public boolean testMur (Jeu jeu , boolean b, int i , int j){
+		
+		poseMur(jeu , b, jeu.getListeJoueurs().get(1).getNumeroJoueur() , i , j);
+		
+		marquage(jeu.getListeJoueurs().get(1).getPosition());
 		
 		
 		
