@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import Jeu.Jeu;
 
 public class Partie extends Thread {
-	private Pipe[] threads;
+	private BALTimeOut[] threads;
 	private int nbClients;
 	private String[] clients;
 	private int nb = 0;
@@ -17,34 +17,16 @@ public class Partie extends Thread {
 	public Partie(int nbclients) {
 		this.nbClients = nbclients;
 		clients = new String[nbClients];
-		threads = new Pipe[nbclients];
+		threads = new BALTimeOut[nbclients];
 		jeu = new Jeu(nbClients);
 	}
 	
 	public void addClient(Socket client) {
 		// Création des connexions
-		Pipe pipe1 = new Pipe(); // Thread -> Serveur
-		Pipe pipe2 = new Pipe(); // Serveur -> Thread
-		threads[nb] = new Pipe(pipe1.out, pipe2.in);
+		threads[nb] = new BALTimeOut();
 			
 		// Thread par client
-		new ServeurThread(client, new Pipe(pipe2.out, pipe1.in)).start();
-		
-		
-		// Récupération du nom
-		while (clients[nb] == null) {
-			try {
-				threads[nb].out.println("3");
-				clients[nb] = threads[nb].in.readLine();
-				System.out.println("Thread " + (nb) + " envoie son nom " + clients[nb]);
-			} catch (IOException e) {
-				System.err.println("Erreur lors de la connexion du client !");
-				return;
-			}
-		}
-		// On dit aux autres joueurs qu'il y a un nouveau client
-		//for (int i = 0 ; i < nb ; i++)
-		//	threads[i].out.println("3" + clients[i]);
+		new ServeurThread(client, threads[nb], nb).start();
 		
 		nb++;
 		
@@ -56,6 +38,10 @@ public class Partie extends Thread {
 	// Partie
 	@Override
 	public void run() {
+		// Demande des noms
+		for (BALTimeOut b : threads)
+			b.setMessage("3");
+				
 		// Affichage des joueurs
 		System.out.println("Début de partie\n\tJoueurs :");
 		for (String s : clients)
