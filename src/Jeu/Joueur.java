@@ -1,9 +1,11 @@
 package Jeu;
 
+import java.util.ArrayList;
+
 public class Joueur {
 
 	
-	private ArrayList<Case> = new listeCasesArrivee<Case>(); 
+	private ArrayList<Case> listeCasesArrivee = new ArrayList<Case>(); 
 	private int numeroJoueur;
 	private int nombreMurs;
 	private Case position;

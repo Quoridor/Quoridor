@@ -59,6 +59,8 @@ public class Jeu {
 		Case caseArrivee = tabCase[i][j];
 		Case caseDepart = joueur.getPosition();
 		
+		
+		
 		return  true;
 	}
 	
@@ -73,8 +75,12 @@ public class Jeu {
 	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
 	 */
 	public boolean mur(int joueur, boolean sens, int x, int y) {
-		laCase = tabCase[x][y];
-		larete = laCase.get
+		Case laCase = tabCase[x][y];
+		Arete larete;
+		
+		if(sens == true)
+		larete = laCase.getHaut();
+		else larete = laCase.getDroite();
 		
 		return true;
 	}
