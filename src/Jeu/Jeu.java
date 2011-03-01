@@ -102,4 +102,9 @@ public class Jeu {
 		this.tabCase = tabCase;
 	}
 
+
+
+public static void main(String[] argv){
+Jeu jeu = new Jeu(1);
+}
 }
