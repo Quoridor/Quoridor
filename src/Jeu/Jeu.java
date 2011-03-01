@@ -1,13 +1,14 @@
+package Jeu;
+
+import java.util.ArrayList;
+
 /**
  * Cette classe gère toute la logique du jeu et permet de respecter les règles
  */
 
-package Jeu;
-
-private ArrayList<Joueur> listeJoueurs= new ArrayList<Joueur>;
-
 public class Jeu {
 	
+	private ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>();
 	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
 	private Case[][] tabCase= new Case[9][9] ;
 	
@@ -16,13 +17,14 @@ public class Jeu {
 		this.nbJoueur=nbJoueur;
 	
 		for(int i=0 ; i<9 ; i++)
-		{ for(int j ; j<9 ; j++)
-		{ if(i==0) 
+		{ 
+			for(int j ; j<9 ; j++)
+			{ if(i==0) 
 			tabCase[i][j].gauche = null;
 		else 
 			tabCase[i-1][j].gauche;
-		if(i==8)
-			tabCase[i][j].gauche = null
+			if(i==8)
+			tabCase[i][j].gauche = null;
 		else
 			tabCase[i-1][j].gauche
 		}
@@ -40,9 +42,13 @@ public class Jeu {
 	
 	
 	
-	public boolean deplacer(int joueur, int x, int y) {
+	public boolean deplacer(int numeroJoueur, int x, int y) {
+		int i=0, j=0 ;
 		/* convertir x y en ij valables */
-		laCase = tabCase[i][j];
+		
+		Joueur joueur = this.listeJoueurs.get(numeroJoueur-1);
+		Case caseArrivee = tabCase[i][j];
+		Case caseDepart = joueur.getPosition();
 		
 		return  true;
 	}
