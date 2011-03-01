@@ -9,6 +9,7 @@ import java.io.PipedWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Observable;
 
 public class Serveur {
 
@@ -37,25 +38,20 @@ public class Serveur {
 		System.out.println("Serveur démarré sur le port " + args[0] + " pour " + nbClients + " clients");
 		Socket clientSocket = null;
 		
+		Partie partie = new Partie(nbClients);
+		
 		// Attente des clients
 		while (nb < nbClients) {
 			try {
 				clientSocket = serverSocket.accept();
-				Pipe pipe1 = new Pipe(); // Thread -> Serveur
-				Pipe pipe2 = new Pipe(); // Serveur -> Thread
-				threads[nb] = new Pipe(pipe1.out, pipe2.in);
-				
-				// Thread par client
-				new ServeurThread(clientSocket, new Pipe(pipe2.out, pipe1.in)).start();
+				partie.addClient(clientSocket);
 				nb++;
 			} catch (IOException e) {
 				System.err.println("Connexion avec le client impossible");
 			}
 		}
-			
-		// Début de partie
-		mainLoop();
-
+		while(true);
+		
 	}
 	
 	static public void mainLoop() {
@@ -115,7 +111,7 @@ public class Serveur {
 	}
 }
 
-class Pipe {
+class Pipe extends Observable {
 	public PrintWriter out;
 	public BufferedReader in;
 	
