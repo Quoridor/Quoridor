@@ -22,13 +22,33 @@ public class Parcours {
 
 	
 	public void poseMur (Jeu jeu , boolean sens , int joueur , int i , int j){
+		
 		if( sens==true)
 		{jeu.getTabCase()[i][j].getHaut().getArriveePlus().getDroite().joueur=joueur;
+		jeu.getTabCase()[i][j].getDroite().joueur=joueur; 
+		}
+		else{ jeu.getTabCase()[i][j].getDroite().getArriveePlus().getHaut().joueur=joueur;
+		jeu.getTabCase()[i][j].getHaut().joueur=joueur; }
 		
 		
-		jeu.getTabCase()[i][j].getDroite().joueur=joueur; }
+		
+		
 	}
 	
+	
+	public void enleverMur (Jeu jeu , boolean sens , int i , int j){
+		
+		if( sens==true)
+		{jeu.getTabCase()[i][j].getHaut().getArriveePlus().getDroite().joueur=0;
+		jeu.getTabCase()[i][j].getDroite().joueur=0; 
+		}
+		else{ jeu.getTabCase()[i][j].getDroite().getArriveePlus().getHaut().joueur=0;
+		jeu.getTabCase()[i][j].getHaut().joueur=0; }
+		
+		
+		
+		
+	}
 	
 	
 	
