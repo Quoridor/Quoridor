@@ -10,6 +10,7 @@ public class Jeu {
 	
 	private ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>();
 	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
+
 	private Case[][] tabCase= new Case[9][9] ;
 	
 	
@@ -78,5 +79,13 @@ public class Jeu {
 		
 		return 0;
 	}	
+	
+	public Case[][] getTabCase() {
+		return tabCase;
+	}
+
+	public void setTabCase(Case[][] tabCase) {
+		this.tabCase = tabCase;
+	}
 
 }
