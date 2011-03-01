@@ -7,7 +7,7 @@ public class Case {
 	}
 	
 	private int pion;
-	private Case gauche ; /* tableau des aretes adjacentes */
+	private Case gauche, droite, haut, bas ; /* tableau des aretes adjacentes */
 	
 	
 	
