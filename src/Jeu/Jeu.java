@@ -19,7 +19,7 @@ public class Jeu {
 		{ for(int j ; j<9 ; j++)
 		{ if(i==0) tabCase[i][j].gauche = null;
 		else tabCase[i-1][j].gauche;
-		if(i==8) tabCase[i][j].gauche = null
+		if(i==8) tabCase[i][j].droite = null
 		else tabCase[i-1][j].gauche
 		}
 		}
