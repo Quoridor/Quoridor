@@ -6,9 +6,19 @@ public class Arete {
  Case depart;
  Case arrivee;
 	
-	public Arete(Case depart , Case arrivee , int joueur){
+	public Arete(Case depart , Case arrivee ){
 		this.depart=depart;
 		this.arrivee=arrivee;
-		this.joueur=joueur;
+		this.joueur=0;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
