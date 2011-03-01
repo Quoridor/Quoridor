@@ -13,28 +13,31 @@ import java.net.Socket;
 public class Serveur {
 
 	static int nbClients = 0;
-	static Pipe[] threads = new Pipe[4];
+	static Pipe[] threads ;;
 	
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
 		
-		System.out.println(args);
+		if (args.length != 2)
+			System.err.println("Mauvais nombre d'arguments !\n\tUsage : serveur port nbJoueurs");
 		
 		// Démarrage
 		try {
-			serverSocket = new ServerSocket(4242);
+			serverSocket = new ServerSocket(Integer.parseInt(args[0]));
 		} catch (IOException e) {
 			System.err.println("Impossible d'ouvrir le port 4242");
 			System.exit(-1);
 		}
 		
-		System.out.println("Serveur démarré");
+		System.out.println("Serveur démarré sur le port " + args[0]);
 		Socket clientSocket = null;
-		while (nbClients < 4) {
+		
+		// Attente des clients
+		while (nbClients < 2) {
 			try {
 				clientSocket = serverSocket.accept();
-				Pipe pipe1 = new Pipe();
-				Pipe pipe2 = new Pipe();
+				Pipe pipe1 = new Pipe(); // Thread -> Serveur
+				Pipe pipe2 = new Pipe(); // Serveur -> Thread
 				threads[nbClients] = new Pipe(pipe1.out, pipe2.in);
 				new ServeurThread(clientSocket, new Pipe(pipe2.out, pipe1.in)).start();
 				nbClients++;
