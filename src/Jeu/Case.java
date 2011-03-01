@@ -1,66 +1,78 @@
 package Jeu;
 
+import java.util.ArrayList;
+
 
 public class Case {
 
-	public Case(){
-	}
-	
-	private int pion=0;
-	private Arete gauche, droite, haut, bas ; /* tableau des aretes adjacentes */
+	private Joueur joueur;
+	private int i;
+	private int j;
 	private boolean marque=false;
+
+	private ArrayList<Case> listeVoisins= new ArrayList<Case>();
 	
-	
-	
-	public void setMarque ( boolean b){
+	public Case(int i, int j){
+		this.i=i;
+		this.j=j;
+	}
+
+	public void setMarque (boolean b){
 		this.marque=b;
 	}
-	
+
 	public boolean getMarque(){
 		return this.marque;
 	}
-	
-	
-	public void setPion ( int joueur){
-		this.pion = joueur;
+
+	public Joueur getJoueur() {
+		return joueur;
+	}
+
+	public void setJoueur(Joueur joueur) {
+		this.joueur = joueur;
 	}
 	
-	public int getPion(){
-		return this.pion;
+	public int getI() {
+		return i;
+	}
+
+	public int getJ() {
+		return j;
 	}
 	
-	
-	
-	public void setGauche( Arete gauche){
-		this.gauche=gauche;
+	public ArrayList<Case> getListeVoisins() {
+		return listeVoisins;
 	}
-	
-	public void setDroite( Arete c){
-		this.droite=c;
+
+	public void setListeVoisins(ArrayList<Case> listeVoisins) {
+		this.listeVoisins=listeVoisins;
 	}
+
+
+public void miseAJourVoisins(Jeu jeu){
+	this.setListeVoisins(null);
 	
-	public void setHaut( Arete c){
-		this.haut=c;
+	for(Joueur joueur : jeu.getListeJoueurs()){
+
+		if( (jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()-1][this.getJ()], joueur))) | (jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()-1][this.getJ()], this, joueur)))){
+			this.listeVoisins.add(jeu.getTabCase()[this.getI()-1][this.getJ()]);
+		}
+
+		if( (jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()+1][this.getJ()], joueur))) | (jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()+1][this.getJ()], this, joueur)))){
+			this.listeVoisins.add(jeu.getTabCase()[this.getI()+1][this.getJ()]);
+		}
+
+		if( (jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()-1], joueur))) | (jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()-1], this, joueur)))){
+			this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()-1]);
+		}	
+
+		if( (jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()+1], joueur))) | (jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()+1], this, joueur)))){
+			this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()+1]);
+		}
+
 	}
-	
-	public void setBas( Arete c){
-		this.bas=c;
-	}
-	
-	public Arete getGauche(){
-		return this.gauche;
-	}
-	
-	public Arete getDroite(){
-		return this.droite;
-	}
-	
-	public Arete getHaut(){
-		return this.haut;
-	}
-	
-	public Arete getBas(){
-		return this.bas;
-	}
+}
 	
 }
+

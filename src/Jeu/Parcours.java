@@ -1,7 +1,7 @@
 package Jeu;
 
-public class Parcours {
-
+public class Parcours {}
+/*
 	
 	public void marquage ( Case c){
 		c.setMarque(true);
@@ -54,4 +54,4 @@ public class Parcours {
 	}
 	
 	
-}
+}*/

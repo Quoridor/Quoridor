@@ -8,38 +8,43 @@ import java.util.ArrayList;
 
 public class Jeu {
 
-	private ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>();
 	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
 
-	private Case[][] tabCase= new Case[9][9] ;
+
+	private Case[][] tabCase= new Case[11][11] ;
+	private ArrayList<Mur> listeMurs =new ArrayList<Mur>();
+	private ArrayList<Joueur> listeJoueurs =new ArrayList<Joueur>();
 
 
 	public Jeu(int nbJoueur) {
+
 		this.nbJoueur=nbJoueur;
 
-		for(int i=0 ; i<9 ; i++)
+		for(int i=0 ; i<11 ; i++)
 		{ 
-			for(int j=0 ; j<9 ; j++)
+			for(int j=0 ; j<11 ; j++)
 			{ 
-				tabCase[i][j]=new Case();
-				if(j==0) 
-					tabCase[i][j].setGauche(null);
-				else 
-					tabCase[i][j].setGauche( new Arete(tabCase[i][j] , tabCase[i][j-1])) ;
-				if(j==8)
-					tabCase[i][j].setGauche(null);
-				else
-					tabCase[i][j].setGauche (new Arete(tabCase[i][j] , tabCase[i][j+1]));
-				if(i==0) 
-					tabCase[i][j].setHaut(null);
-				else 
-					tabCase[i][j].setHaut( new Arete(tabCase[i][j] , tabCase[i-1][j])) ;
-				if(i==8)
-					tabCase[i][j].setBas(null);
-				else
-					tabCase[i][j].setBas (new Arete(tabCase[i][j] , tabCase[i+1][j]));
+				tabCase[i][j]=new Case(i,j);
 			}
 		}
+		
+		for(int i=1; i<=nbJoueur;i++){
+			this.listeJoueurs.add(new Joueur(i,this));
+		}
+		
+		
+		for(int i=0 ; i<11 ; i++)
+		{ 
+			this.listeMurs.add( new Mur(getTabCase()[i][0],getTabCase()[i][1], getListeJoueurs().get(0)));
+			this.listeMurs.add( new Mur(getTabCase()[i][9],getTabCase()[i][10], getListeJoueurs().get(0)));
+		}
+		for(int j=0 ; j<11 ; j++)
+		{ 
+			this.listeMurs.add( new Mur(getTabCase()[0][j],getTabCase()[1][j], getListeJoueurs().get(0)));
+			this.listeMurs.add( new Mur(getTabCase()[9][j],getTabCase()[10][j], getListeJoueurs().get(0)));
+		}
+
+		
 
 	}
 
@@ -53,13 +58,25 @@ public class Jeu {
 
 
 
-	public boolean deplacer(int numeroJoueur, int i, int j) {
+	public boolean deplacer(Joueur joueurDeplace, int i, int j) {
 
-		Joueur joueur = this.listeJoueurs.get(numeroJoueur-1);
 		Case caseArrivee = tabCase[i][j];
-		Case caseDepart = joueur.getPosition();
+		//Tester si caseArrivee est dans la liste des voisins de caseDepart !
+		Case caseDepart = joueurDeplace.getPosition();
+		for(Joueur joueurs : this.listeJoueurs){
+			for(Mur mur : this.listeMurs)
+			{
+				if(this.listeMurs.contains(new Mur(caseDepart,caseArrivee,joueurs))==true | this.listeMurs.contains(new Mur(caseArrivee,caseDepart,joueurs))==true)
+					return false;
+			}
 
+			if(caseArrivee.getJoueur()!=null)
+			{ System.out.println(j+caseArrivee.getJ()-caseDepart.getJ());
+				Case caseSaut = tabCase[i+caseArrivee.getI()-caseDepart.getI()][j+caseArrivee.getJ()-caseDepart.getJ()];
+				return deplacer(caseArrivee.getJoueur(), caseSaut.getI(), caseSaut.getJ());
+			}
 
+		}
 
 		return  true;
 	}
@@ -75,14 +92,19 @@ public class Jeu {
 	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
 	 */
 	public boolean mur(int joueur, boolean sens, int x, int y) {
-		Case laCase = tabCase[x][y];
-		Arete larete;
-
-		if(sens == true)
-			larete = laCase.getHaut();
-		else larete = laCase.getDroite();
-
 		return true;
+	}
+
+	public void marquer(Case c){
+		c.miseAJourVoisins(this);
+		c.setMarque(true);
+		for(Case casesVoisines : c.getListeVoisins())
+		{
+			if(!casesVoisines.getMarque())
+				marquer(casesVoisines);
+		}
+
+
 	}
 
 	/**
@@ -102,10 +124,33 @@ public class Jeu {
 		this.tabCase = tabCase;
 	}
 
+	public ArrayList<Mur> getListeMurs() {
+		return listeMurs;
+	}
+
+	public void setListeMurs(ArrayList<Mur> listeMurs) {
+		this.listeMurs = listeMurs;
+	}
+
+	public ArrayList<Joueur> getListeJoueurs() {
+		return listeJoueurs;
+	}
+
+	public void setListeJoueurs(ArrayList<Joueur> listeJoueurs) {
+		this.listeJoueurs = listeJoueurs;
+	}
 
 
 	public static void main(String[] argv){
-		Jeu jeu = new Jeu(1);
+		Jeu jeu = new Jeu(2);
+		System.out.println(jeu.getListeJoueurs().get(1).getPosition().getI());
+		if (jeu.deplacer(jeu.getListeJoueurs().get(1),4,1)) {
+			System.out.println("coucou");
+		}
+		jeu.getListeJoueurs().get(0).setPosition(jeu.getTabCase()[4][2]);
+		if (jeu.deplacer(jeu.getListeJoueurs().get(1),4,2)){
+			System.out.println("sjklfjskl");
+		}
 	}
 
 }
