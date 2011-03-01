@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import java.awt.Dimension;
 
+
 public class FenetreJeu extends JFrame {
 	static final long serialVersionUID = 1;
 	
@@ -20,5 +21,6 @@ public class FenetreJeu extends JFrame {
 		fenetreJeu.setLocation((largeurEcran - largeurFenetre)/2, (hauteurEcran - hauteurFenetre)/2);
 		fenetreJeu.setVisible(true);
 		fenetreJeu.setContentPane(new Grille());
+		
 	}
 }

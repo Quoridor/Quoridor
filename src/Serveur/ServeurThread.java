@@ -26,45 +26,34 @@ public class ServeurThread extends Thread {
 
 			// Communication avec le client
 			String inputLine = in.readLine();
-			while(inputLine != null) {
+			while(true) {
 				// Récupération de la commande du client
-				this.pipe.out.println(inputLine);
-				
-				// Si le serveur veut écrire, on transmet son message
-				String buf;
-				if ((buf = pipe.in.readLine()) != null)
-					out.println(buf);
-				
-				/*String[] args = inputLine.split(" ");
-				if ((args.length > 0)) {
-					try {
-					int cmd = Integer.parseInt(args[0]);
-												
-					switch (cmd) {
-					// NOM
-					case(3):
-						if (args.length > 1) {
-							this.name = args[1];
-							System.out.println(name() + " : le client donne son nom : " + this.name);
-						}
-						break;
-					// Quitter
-					case(7):
-						this.pipe.out.writeln("");
-							
-					}
-					}
-					catch (NumberFormatException e) {
-						System.err.println(name() + " : requête invalide !");
-					}*/
-					inputLine = in.readLine();
+				//if (in.ready()) {
+					System.out.println("Lecture du client");
+					this.pipe.out.println(in.readLine());
+					
+				//}
+				synchronized(this) {
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					System.out.println("Lecture du serveur");
+					out.println(this.pipe.in.readLine());
 				}
+				}	
+				// On transmet le message du serveur
+				//if (this.pipe.in.ready()) {
+					
+				//}
+				
+				}
+			//}
 			//}
 			
 			// Test d'écriture dans le pipe
-			pipe.out.println(name() + " c'est moi !");
-			String buf = pipe.in.readLine();
-			System.out.println(name() + " : " + buf);
+			//pipe.out.println(name() + " c'est moi !");
+			//String buf = pipe.in.readLine();
+			//System.out.println(name() + " : " + buf);
 			
 			/*String inputLine = in.readLine();
 			while(inputLine!=null) {
