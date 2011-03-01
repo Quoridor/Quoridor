@@ -102,7 +102,7 @@ public class Partie extends Thread {
 				break;
 			// MUR
 			case(4):
-				
+				break;
 				
 			// Quitter
 			case(7):
@@ -118,13 +118,16 @@ public class Partie extends Thread {
 				break;
 			// Echo
 			case(9):
-				threads[joueur - 1].client.setMessage(req.substring(2));
+				if (req.length() > 2)
+					threads[joueur - 1].client.setMessage(req.substring(2));
+				else
+					threads[joueur - 1].client.setMessage("Echo");
 				break;
 			// Liste joueurs
 			case(10):
-				String buf = "10";
+				String buf = "10 ";
 				for (String s : clients)
-					buf += (" " + s);
+					buf += (";" + s);
 				threads[joueur - 1].client.setMessage(buf);
 			default:
 				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));

@@ -54,6 +54,10 @@ public class Reseau {
 		return false;
 	}
 	
+	public void recupererJoueurs() {
+		out.println("10");
+	}
+	
 	/**
 	 * Fonction qui dit au serveur que l'on se déconnecte
 	 * @return		Retourne false si il y a une erreur
