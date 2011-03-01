@@ -6,11 +6,15 @@ package Jeu;
 
 public class Jeu {
 	
-	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4
-	 */
+	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
+	private Case[][] tabCase= new Case[9][9] ;
 	
 	public Jeu(int nbJoueur) {
-		this.nbJoueur=nbJoueur;}
+		this.nbJoueur=nbJoueur;
+	
+		for(int i=0 , )
+	
+	}
 	
 	/**
 	 * Fonction de déplacement d'un joueur
@@ -19,11 +23,17 @@ public class Jeu {
 	 * @param y		 Ordonnée où le déplacer
 	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
 	 */
+	
+	
+	
 	public boolean deplacer(int joueur, int x, int y) {
-		lacase = tabCase[x][y];
+		/* convertir x y en ij valables */
+		laCase = tabCase[i][j];
 		
 		return  true;
 	}
+	
+	
 	
 	/**
 	 * Fonction d'ajout de mur
@@ -34,7 +44,8 @@ public class Jeu {
 	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
 	 */
 	public boolean mur(int joueur, boolean sens, int x, int y) {
-		lacase = tab
+		laCase = tabCase[x][y];
+		larete = laCase.get
 		
 		return true;
 	}
