@@ -34,7 +34,7 @@ public class Serveur {
 		nbClients = Integer.parseInt(args[1]);
 		threads = new Pipe[nbClients];
 		
-		System.out.println("Serveur démarré sur le port " + args[0]);
+		System.out.println("Serveur démarré sur le port " + args[0] + " pour " + nbClients + " clients");
 		Socket clientSocket = null;
 		
 		// Attente des clients
@@ -52,31 +52,67 @@ public class Serveur {
 				System.err.println("Connexion avec le client impossible");
 			}
 		}
-		
-		String buf;
-		
+			
 		// Début de partie
+		mainLoop();
+
+	}
+	
+	static public void mainLoop() {
+		String buf;
+		System.out.println("Début de partie");
 		try {
 			while (true) {
 				for (int i = 0 ; i < nbClients ; i++) {
+					// Si un thread a écrit dans le pipe
 					if (threads[i].in.ready()) {
-						buf = threads[i].in.readLine();
-						System.out.println("Le joueur " + i + " : " + buf);
-						threads[i].out.println("echo" + buf);
+						// Parsage de la requête
+						String[] args = threads[i].in.readLine().split(" ");
+
+						// Si la requête a au moins une partie
+						if ((args.length > 0)) {
+							try {
+								// Récupération du numéro de requête
+								int cmd = Integer.parseInt(args[0]);
+														
+								// Gestion de la requete
+								requete(cmd, args, i);									
+							}						
+							catch (NumberFormatException e) {
+								System.err.println("Thread " + i +  " : requête invalide !");
+							}
+						}
 					}
 				}
 			}
 		} catch (IOException e) {
 			System.err.println("Connexion avec les threads impossible");
 		}
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	}
+	
+	static public void requete(int cmd, String[] args, int thread) {
+		switch (cmd) {
+			// NOM
+			case(3):
+				if (args.length > 1) {
+					String name = args[1];
+					System.out.println("Thread " + thread + " : Le client donne son nom : " + name);
+				}
+				return;
+			// Quitter
+			case(7):
+				System.out.println("Thread " + thread + " : Le client quitte");
+				System.exit(-1);
+				return;
+			// Echo
+			case(9):
+				threads[thread].out.println("Echo : " + args[0]);
+				threads[thread].notify();
+				return;
+			default:
+				System.err.println("Numéro de requête invalide : " + cmd);
 		}
 	}
-
 }
 
 class Pipe {
@@ -105,9 +141,4 @@ class Pipe {
 	}
 }
 
-/*class BiConnexion {
-	// Le serveur écrit dessus et le thread lit dessus
-	public Pipe pipe1 = new Pipe();
-	// Le thread écrit dessus et le serveur lit dessus
-	public Pipe pipe2 = new Pipe();
-}*/
+
