@@ -23,8 +23,17 @@ public class Curseur extends JPanel {
         private int abscisse;
         private int ordonnee;
         private int tailleCase=40;
+        
+        // Mode
+        //	1 : deplacement
+        //	2 : mur horizontal
+        //	3 : mur vertical
         private int fonction=1;
        
+        
+        // Etat
+        private boolean actif = false;
+        
         Curseur() {
         	
             setPreferredSize(new Dimension(400,400));
@@ -43,14 +52,20 @@ public class Curseur extends JPanel {
             });
        
         addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent clic) {
+            public void mouseClicked(MouseEvent clic) {
+            	// Si nous sommes dans la grille
                 if ((clic.getX() > 0) &&
                 	(clic.getX() < 9*tailleCase) &&
                 	(clic.getY() > 0) &&
-                	(clic.getY() < 9*tailleCase)) {
-                	//switch ()
+                	(clic.getY() < 9*tailleCase) &&
+                	actif) {
+                	
                     int coorX = clic.getX()/tailleCase+1;
                     int coorY = clic.getY()/tailleCase+1;
+                	
+                	// Envoi
+                	//switch ()                	
+
 
                     System.out.println("x= " + (coorX));
                     System.out.println("y= " + (coorY));
@@ -66,24 +81,34 @@ public class Curseur extends JPanel {
         }
         
         public void paintComponent(Graphics g) {
-            super.paintComponent(g);     
+            super.paintComponent(g);
+            
+            // Damier
             g.setColor(Color.RED);
             g.fillRect(0,0,9*tailleCase,9*tailleCase);
+            
+            // Grille
             g.setColor(Color.BLACK);
             for (int i= 0; i < 10; i++) {
                 g.drawLine(0, i*tailleCase, 9*tailleCase, i*tailleCase);           
                 g.drawLine(i*tailleCase, 0, i*tailleCase, 9*tailleCase);
             }
+            
+            // Affichage du jeu
+            //...            
+            
+            // Curseur
+            if ()
             switch(fonction) {
                 case 1:
-                                g.fillOval((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase,tailleCase,tailleCase);
-                break;
+                	g.fillOval((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase,tailleCase,tailleCase);
+                	break;
                 case 2:
-                                g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-5,80,11);
-                break;
+                	g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-5,80,11);
+                	break;
                 case 3:
-                                g.fillRect((abscisse/tailleCase)*tailleCase-5,(ordonnee/tailleCase)*tailleCase,11,80);
-                break;
+                	g.fillRect((abscisse/tailleCase)*tailleCase-5,(ordonnee/tailleCase)*tailleCase,11,80);
+                	break;
             }
         }
 }

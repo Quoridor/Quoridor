@@ -18,7 +18,6 @@ public class FenetreConnexion extends JFrame implements ActionListener{
 	private JTextField nom = new JTextField();
 	private JTextField serveur = new JTextField();
 	private JSpinner port = new JSpinner(new SpinnerNumberModel(1025, 1, 65536, 1));
-	private Jeu jeu = new Jeu(4);
 	
 	public FenetreConnexion() {
 		super("Connexion");
@@ -55,13 +54,13 @@ public class FenetreConnexion extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {		
 		// Création de l'objet Reseau
 		try {
-			Reseau reseau = new Reseau(serveur.getText(), (Integer) port.getValue(), jeu, nom.getText());
-			
-			// Lancement du jeu
-			new FenetreJeu(reseau);
+			Reseau reseau = new Reseau(serveur.getText(), (Integer) port.getValue(), nom.getText());
 			
 			// Cacher la fenetre de connexion
 			this.setVisible(false);
+			
+			// Lancement du jeu
+			new FenetreJeu(reseau);			
 		}
 		catch (Exception e) {			
 			JOptionPane.showMessageDialog(null, "Impossible de joindre le serveur", "Erreur de connexion", JOptionPane.ERROR_MESSAGE);

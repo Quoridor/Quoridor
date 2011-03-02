@@ -25,7 +25,7 @@ public class Reseau extends Observable{
 	 * @param port	Port sur lequel on veut se connecter
 	 * @param jeu	Instance Jeu du client
 	 */
-	public Reseau(String host, int port, Jeu jeu, String nom) throws Exception {
+	public Reseau(String host, int port, String nom) throws Exception {
 		this.nom = nom;
 		Socket connexion = null;
 		try {
@@ -83,7 +83,8 @@ public class Reseau extends Observable{
 			case(3):
 				System.out.println("->Le serveur demande mon nom");
 				envoyerNom(nom);				
-				break;
+				break;// Cacher la fenetre de connexion
+				this.setVisible(false);
 			// MURH
 			case(4):
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur horizontal en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
@@ -120,6 +121,11 @@ public class Reseau extends Observable{
 			case(10):
 				joueurs = req.substring(2).split(";");
 				break;
+			// Nombre de joueurs
+			case(12):
+				Integer.parseInt(args[1]);
+				break;	
+				
 			default:
 				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));
 			}
