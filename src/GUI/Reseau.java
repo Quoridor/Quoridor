@@ -99,5 +99,7 @@ public class Reseau {
 	public int getJoueur() {
 		return 1;
 	}
+	
+	
 
 }

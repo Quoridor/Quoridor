@@ -139,7 +139,7 @@ public class Jeu {
 	public void setListeJoueurs(ArrayList<Joueur> listeJoueurs) {
 		this.listeJoueurs = listeJoueurs;
 	}
-
+	
 
 	public static void main(String[] argv){
 		Jeu jeu = new Jeu(2);

@@ -8,71 +8,45 @@ import java.net.Socket;
 
 
 public class ServeurThread extends Thread {
-	private Socket client;
-	private Pipe pipe;
-	private String name = null;
+	private BufferedReader in;
+	private PrintWriter out;
+	private BALTimeOut pipe;
+	private int num;
 
-	public ServeurThread(Socket client, Pipe pipe) {
-		this.client = client;
+	public ServeurThread(Socket client, BALTimeOut pipe, int num) {
+		try {
+			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			out = new PrintWriter(client.getOutputStream(), true);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.pipe = pipe;
+		this.num = num;
 	}
 
 	@Override
 	public void run() {
-		try {
-			System.out.println(name() + " lancé...");
-			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-
-			// Communication avec le client
-			String inputLine = in.readLine();
-			while(true) {
-				// Récupération de la commande du client
-				//if (in.ready()) {
-					System.out.println("Lecture du client");
-					this.pipe.out.println(in.readLine());
-					
-				//}
-				synchronized(this) {
-				try {
-					this.wait();
-				} catch (InterruptedException e) {
-					System.out.println("Lecture du serveur");
-					out.println(this.pipe.in.readLine());
-				}
-				}	
-				// On transmet le message du serveur
-				//if (this.pipe.in.ready()) {
-					
-				//}
-				
-				}
-			//}
-			//}
-			
-			// Test d'écriture dans le pipe
-			//pipe.out.println(name() + " c'est moi !");
-			//String buf = pipe.in.readLine();
-			//System.out.println(name() + " : " + buf);
-			
-			/*String inputLine = in.readLine();
-			while(inputLine!=null) {
-				System.out.println(getName()+" : le client dit : "+inputLine);
-				System.out.println(getName()+" : le serveur répond : "+inputLine);
-				out.println(inputLine);
-				inputLine = in.readLine();
+		
+		
+		// Thread de lecture
+		Thread lecture = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true)
+					try {
+						pipe.setMessage(in.readLine());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}								
 			}
-			out.close();
-			in.close();
-			client.close();*/
-		} catch (IOException e) {
-			e.printStackTrace();
+		});
+		lecture.start();
+		
+		// Ecriture
+		System.out.println("Thread N°" + num + " lancé...");
+		// Envoi des données
+		while (true) {
+			out.println(pipe.getMessage());			
 		}
-		System.out.println(name() + " : client déconnecté");
 	}
-	
-	public String name() {
-		return this.name != null ? getName() + "(" + this.name + ")" : getName();
-	}
-
 }
