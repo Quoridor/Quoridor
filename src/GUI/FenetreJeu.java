@@ -18,9 +18,15 @@ public class FenetreJeu extends JFrame {
 		
 		// Fenêtre de jeu
 		this.setPreferredSize(new Dimension(900, 600));
-				
+		
+		Box vbox = Box.createVerticalBox();
+		
+		Boutons boutons = new Boutons();
+		vbox.add(new Boutons());
+		
 		// Alignement horizontal
 		Box hbox = Box.createHorizontalBox();
+		vbox.add(hbox);
 		
 		// Chat
 		Chat chat = new Chat(reseau);
@@ -28,12 +34,12 @@ public class FenetreJeu extends JFrame {
 		// Ajout du controleur à reseau
 		reseau.setControleur(chat.getControleur());
 		
-		Grille grille = new Grille();
+		Curseur grille = new Curseur();
 		grille.setPreferredSize(getMaximumSize());
 		hbox.add(grille);
 		hbox.add(chat);		
 		
-		this.setContentPane(hbox);
+		this.setContentPane(vbox);
 		this.pack();
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);				
