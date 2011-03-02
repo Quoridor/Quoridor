@@ -57,22 +57,26 @@ public void miseAJourVoisins(Jeu jeu){
 
 		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()-1][this.getJ()], joueur.getNumeroJoueur()))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()-1][this.getJ()], this, joueur.getNumeroJoueur())))){
 			this.listeVoisins.add(jeu.getTabCase()[this.getI()-1][this.getJ()]);
+			System.out.println("haut");
 		}
 
 		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()+1][this.getJ()], joueur.getNumeroJoueur()))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()+1][this.getJ()], this, joueur.getNumeroJoueur())))){
 			this.listeVoisins.add(jeu.getTabCase()[this.getI()+1][this.getJ()]);
+			System.out.println("bas");
+			
 		}
 
 		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()-1], joueur.getNumeroJoueur()))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()-1], this, joueur.getNumeroJoueur())))){
 			this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()-1]);
+			System.out.println("gauche");
 		}	
 
 		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()+1], joueur.getNumeroJoueur()))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()+1], this, joueur.getNumeroJoueur())))){
 			this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()+1]);
+			System.out.println("droite");
 		}
 
 	}
 }
 	
 }
-

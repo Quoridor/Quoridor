@@ -62,14 +62,15 @@ public class Jeu {
 		Case caseDepart = joueurDeplace.getPosition();
 
 		if(!caseDepart.getListeVoisins().contains(caseArrivee))
-		{
+		{ System.out.println("pas voisin");
 			return false;
 		}
 		else
 		{
 			for(Joueur joueurs : this.listeJoueurs){
 					if(this.listeMurs.contains(new Mur(caseDepart,caseArrivee,joueurs.getNumeroJoueur()))==true | this.listeMurs.contains(new Mur(caseArrivee,caseDepart,joueurs.getNumeroJoueur()))==true)
-						return false;
+						{System.out.println("mur présent");
+						return false;												}
 
 				if(caseArrivee.getJoueur()!=null)
 				{ 
@@ -92,8 +93,23 @@ public class Jeu {
 		return true;
 	}
 
+<<<<<<< HEAD
+	public void poseMur(int numeroJoueur, int sens, int i , int j){
+		Case ici = this.getTabCase()[i][j];
+		if(sens==0){
+			this.listeMurs.add(new Mur(ici,this.getTabCase()[i-1][j], numeroJoueur));
+			this.listeMurs.add(new Mur(this.getTabCase()[i][j+1],this.getTabCase()[i-1][j+1], numeroJoueur));
+		}
+		else
+			if (sens==1){
+				this.listeMurs.add(new Mur(ici,this.getTabCase()[i][j-1], numeroJoueur));
+				this.listeMurs.add(new Mur(this.getTabCase()[i+1][j],this.getTabCase()[i+1][j-1], numeroJoueur));
+
+			}
+=======
 	public void poseMur(boolean sens  ,int x , int y){
 		Case ici = this.tabCase[x][y];
+>>>>>>> a99a844140cd24e11551dc85bcd5b30f512c1822
 		
 	}
 	
@@ -153,8 +169,11 @@ public class Jeu {
 
 	public static void main(String[] argv){
 		Jeu jeu = new Jeu(2);
+		System.out.println(jeu.getListeJoueurs().get(0).getPosition().getI());
+		System.out.println(jeu.getListeJoueurs().get(0).getPosition().getJ());
 		System.out.println(jeu.getListeJoueurs().get(1).getPosition().getI());
-		if (jeu.deplacer(1,2,5)) {
+		System.out.println(jeu.getListeJoueurs().get(1).getPosition().getJ());
+		if (jeu.deplacer(1,8,5)) {
 			System.out.println("coucou");
 		}
 		jeu.getListeJoueurs().get(0).setPosition(jeu.getTabCase()[4][2], jeu);

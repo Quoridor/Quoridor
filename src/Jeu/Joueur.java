@@ -18,7 +18,10 @@ public class Joueur {
 			for(int j=1;j<10;j++){
 				this.listeCasesArrivee.add(jeu.getTabCase()[1][j]);
 			}
+			System.out.println("n°1");
 			this.setPosition(jeu.getTabCase()[9][5], jeu);
+			System.out.println("n°1");
+		
 			break;
 		case 3 :
 			for(int i=1;i<10;i++){
@@ -31,6 +34,7 @@ public class Joueur {
 				this.listeCasesArrivee.add(jeu.getTabCase()[9][j]);
 			}
 			this.setPosition(jeu.getTabCase()[1][5], jeu);
+			System.out.println("n°2");
 			break;
 		case 4 :
 			for(int i=1;i<10;i++){
@@ -40,6 +44,7 @@ public class Joueur {
 			break;
 		default :
 			this.listeCasesArrivee=null;
+			System.out.println("problème");
 			break;
 		}
 
