@@ -43,7 +43,9 @@ public class Partie extends Thread {
 					for (int i = 1 ; i <= nb ; i++)
 						requete(threads[i - 1].serveur.tryGetMessage(200), 0, i);											
 			}
-		});		
+		});
+		// Envoi du nombre de clients 2 ou 4
+		threads[nb - 1].client.setMessage("12 " + nbClients);
 		
 		// Premier joueur
 		if (nb == 1)

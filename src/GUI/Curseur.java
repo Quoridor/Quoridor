@@ -29,12 +29,16 @@ public class Curseur extends JPanel {
         //	2 : mur horizontal
         //	3 : mur vertical
         private int fonction=1;
-       
-        
+               
         // Etat
         private boolean actif = false;
         
-        Curseur() {
+        // Reseau
+        private Reseau reseau;
+        
+        Curseur(Reseau reseau) {
+        	// Reseau
+        	this.reseau = reseau;
         	
             setPreferredSize(new Dimension(400,400));
             addMouseMotionListener(new MouseMotionAdapter() {
@@ -64,7 +68,7 @@ public class Curseur extends JPanel {
                     int coorY = clic.getY()/tailleCase+1;
                 	
                 	// Envoi
-                	switch ()                	
+                	switch ()              	
 
 
                     System.out.println("x= " + (coorX));

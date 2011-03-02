@@ -123,7 +123,7 @@ public class Reseau extends Observable{
 				break;
 			// Nombre de joueurs
 			case(12):
-				Integer.parseInt(args[1]);
+				this.jeu = new Jeu(Integer.parseInt(args[1]));
 				break;	
 				
 			default:
@@ -223,5 +223,9 @@ public class Reseau extends Observable{
 		// Un fois le controleur mis on le signale
 		controleur.ecrire("->Connexion réussie");
 		out.println("8 Je vient de me connecter");
+	}
+	
+	public Jeu getJeu() {
+		return this.jeu;
 	}
 }
