@@ -64,7 +64,7 @@ public class Curseur extends JPanel {
                     int coorY = clic.getY()/tailleCase+1;
                 	
                 	// Envoi
-                	//switch ()                	
+                	switch ()                	
 
 
                     System.out.println("x= " + (coorX));
@@ -97,18 +97,19 @@ public class Curseur extends JPanel {
             // Affichage du jeu
             //...            
             
-            // Curseur
-            if ()
-            switch(fonction) {
-                case 1:
-                	g.fillOval((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase,tailleCase,tailleCase);
-                	break;
-                case 2:
-                	g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-5,80,11);
-                	break;
-                case 3:
-                	g.fillRect((abscisse/tailleCase)*tailleCase-5,(ordonnee/tailleCase)*tailleCase,11,80);
-                	break;
+            // Curseur si etat actif
+            if (actif) {
+	            switch(fonction) {
+	                case 1:
+	                	g.fillOval((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase,tailleCase,tailleCase);
+	                	break;
+	                case 2:
+	                	g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-5,80,11);
+	                	break;
+	                case 3:
+	                	g.fillRect((abscisse/tailleCase)*tailleCase-5,(ordonnee/tailleCase)*tailleCase,11,80);
+	                	break;
+	            }
             }
         }
 }

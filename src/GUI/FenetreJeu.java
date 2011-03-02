@@ -20,12 +20,9 @@ public class FenetreJeu extends JFrame {
 		this.setPreferredSize(new Dimension(901, 600));
 		
 		Box vbox = Box.createVerticalBox();
-		
-		
-		
+			
 		// Alignement horizontal
 		Box hbox = Box.createHorizontalBox();
-		
 		
 		// Chat
 		Chat chat = new Chat(reseau);
