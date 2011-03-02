@@ -41,8 +41,7 @@ public class Partie extends Thread {
 			public void run() {
 				while (true)
 					for (int i = 1 ; i <= nb ; i++)
-						if (i != courant)
-							requete(threads[i - 1].serveur.tryGetMessage(2000), 0, i);											
+						requete(threads[i - 1].serveur.tryGetMessage(200), 0, i);											
 			}
 		});		
 		
@@ -121,8 +120,8 @@ public class Partie extends Thread {
 				if (req.length() <= 2)
 					return false;
 				System.out.println("->Le client " + clients[joueur - 1] + " écrit : " + req.substring(2));
-				for (Pipe b : threads)
-					b.client.setMessage(clients[joueur - 1] + " : " + req.substring(2));
+				for (int i = 0 ; i < nb ; i++)
+					threads[i].client.setMessage("8 " + clients[joueur - 1] + " : " + req.substring(2));
 				break;
 			// Echo
 			case(9):

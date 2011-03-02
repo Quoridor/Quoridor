@@ -38,8 +38,8 @@ public class Reseau extends Observable{
 			throw e;
 		}
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(connexion.getInputStream()));
-			PrintWriter out = new PrintWriter(connexion.getOutputStream(), true);
+			in = new BufferedReader(new InputStreamReader(connexion.getInputStream()));
+			out = new PrintWriter(connexion.getOutputStream(), true);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new Exception();
@@ -48,7 +48,7 @@ public class Reseau extends Observable{
 		// Thread de lecture
 		Thread lecture = new Thread(new Runnable() {
 			@Override
-			public void run() {
+			public void run() {				
 				while (true)
 					try {
 						if (in.ready())
@@ -57,7 +57,10 @@ public class Reseau extends Observable{
 						e.printStackTrace();
 					}								
 			}
-		});				
+		});	
+		lecture.start();
+		
+		this.envoyerNom(nom);
 	}
 	/**
 	 * Fonction qui gère les informations reçues du serveur
@@ -72,6 +75,10 @@ public class Reseau extends Observable{
 		
 		try {
 			switch (Integer.parseInt(args[0])) {
+			// Jouer
+			case(2):
+				break;
+			
 			// Envoyer son nom
 			case(3):
 				System.out.println("->Le serveur demande mon nom");
@@ -180,6 +187,11 @@ public class Reseau extends Observable{
 		return joueur;
 	}
 	
+	public void finalize()
+    {
+         signalerFin();   
+    }
+	
 	/**
 	 * Renvoit la liste des joueurs
 	 * @return
@@ -196,10 +208,14 @@ public class Reseau extends Observable{
 	}
 	
 	public void chat(String texte) {
-		out.println("3 " + texte);
+		out.println("8 " + texte);
 	}
 	
 	public void setControleur(ControleurReseau controleur) {
 		this.controleur = controleur;
+		
+		// Un fois le controleur mis on le signale
+		controleur.ecrire("->Connexion réussie");
+		out.println("8 Je vient de me connecter");
 	}
 }

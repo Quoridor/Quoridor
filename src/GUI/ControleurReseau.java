@@ -15,7 +15,8 @@ public class ControleurReseau implements ActionListener {
 	// Envoi du message
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		this.reseau.chat(chat.getTexte());
+		this.reseau.chat(this.chat.getTexte());
+		this.chat.cleanPrompt();
 	}
 	
 	public void ecrire(String texte) {

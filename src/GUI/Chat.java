@@ -13,7 +13,7 @@ import sun.awt.resources.awt;
 public class Chat extends JPanel {
 	// Interface
 	private JTextArea discussion = new JTextArea(); 		// Zone de texte
-	private JTextField phrase = new JTextField();			// Zone de saisie de texte
+	public JTextField phrase = new JTextField();			// Zone de saisie de texte
 	private JButton envoyer = new JButton("Envoyer");		// Bouton d'envoi
 	
 	// Connexions
@@ -31,6 +31,7 @@ public class Chat extends JPanel {
 		this.setMinimumSize(new Dimension(400, 500));
 		this.setPreferredSize(new Dimension(400, 500));
 		discussion.setPreferredSize(new Dimension(350, 400));
+		discussion.setEditable(false);
 		vbox.add(discussion);
 		vbox.add(hbox);
 		
@@ -39,6 +40,9 @@ public class Chat extends JPanel {
 		
 		envoyer.addActionListener(controleur);
 		this.add(vbox);
+		phrase.setText("Message");
+		
+
 	}
 	
 	public void ecrire(String texte) {
@@ -46,7 +50,11 @@ public class Chat extends JPanel {
 	}
 	
 	public String getTexte() {
-		return envoyer.getText();
+		return phrase.getText();
+	}
+	
+	public void cleanPrompt() {
+		phrase.setText("");
 	}
 	
 	public ControleurReseau getControleur() {

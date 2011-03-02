@@ -32,7 +32,7 @@ public class Serveur {
 			System.exit(-1);
 		}
 		
-		nbClients = Integer.parseInt(args[1]);
+		nbClients = 4;//Integer.parseInt(args[1]);
 		threads = new Pipe[nbClients];
 		
 		System.out.println("Serveur démarré sur le port " + args[0] + " pour " + nbClients + " clients");
