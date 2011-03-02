@@ -18,7 +18,6 @@ public class Joueur {
 			for(int j=1;j<10;j++){
 				this.listeCasesArrivee.add(jeu.getTabCase()[1][j]);
 			}
-			System.out.println("n°1");
 			this.setPosition(jeu.getTabCase()[9][5], jeu);
 			System.out.println("n°1");
 		

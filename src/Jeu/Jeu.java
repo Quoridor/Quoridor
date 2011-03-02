@@ -43,13 +43,10 @@ public class Jeu {
 		
 		
 		for(int i=1; i<=nbJoueur;i++){
-			this.listeJoueurs.add(new Joueur(i,this));
+			Joueur J = new Joueur(i,this);
+			this.listeJoueurs.add(J);
 		}
 		
-		
-
-		
-
 	}
 
 	
@@ -63,29 +60,16 @@ public class Jeu {
 
 		if(!caseDepart.getListeVoisins().contains(caseArrivee))
 		{ System.out.println("pas voisin");
-			return false;
+		return false;
 		}
 		else
 		{
-			for(Joueur joueurs : this.listeJoueurs){
-					if(this.listeMurs.contains(new Mur(caseDepart,caseArrivee,joueurs.getNumeroJoueur()))==true | this.listeMurs.contains(new Mur(caseArrivee,caseDepart,joueurs.getNumeroJoueur()))==true)
-						{System.out.println("mur présent");
-						return false;												}
-
-				if(caseArrivee.getJoueur()!=null)
-				{ 
-				Case caseSaut = tabCase[i+caseArrivee.getI()-caseDepart.getI()][j+caseArrivee.getJ()-caseDepart.getJ()];
-				return deplacer(caseArrivee.getJoueur().getNumeroJoueur(), caseSaut.getI(), caseSaut.getJ());
-				}
-
-			}
+			return  true;
 		}
-		return  true;
 	}
 
 
 
-	
 	public boolean mur(int numeroJoueur, boolean sens, int x, int y) {
 		
 		
@@ -93,9 +77,9 @@ public class Jeu {
 		return true;
 	}
 
-<<<<<<< HEAD
-	public void poseMur(int numeroJoueur, int sens, int i , int j){
-		Case ici = this.getTabCase()[i][j];
+
+	private void poseMur(int numeroJoueur, int sens, int i , int j){
+		Case ici = this.tabCase[i][j];
 		if(sens==0){
 			this.listeMurs.add(new Mur(ici,this.getTabCase()[i-1][j], numeroJoueur));
 			this.listeMurs.add(new Mur(this.getTabCase()[i][j+1],this.getTabCase()[i-1][j+1], numeroJoueur));
@@ -104,16 +88,11 @@ public class Jeu {
 			if (sens==1){
 				this.listeMurs.add(new Mur(ici,this.getTabCase()[i][j-1], numeroJoueur));
 				this.listeMurs.add(new Mur(this.getTabCase()[i+1][j],this.getTabCase()[i+1][j-1], numeroJoueur));
-
 			}
-=======
-	public void poseMur(boolean sens  ,int x , int y){
-		Case ici = this.tabCase[x][y];
->>>>>>> a99a844140cd24e11551dc85bcd5b30f512c1822
-		
+
 	}
-	
-	
+
+
 	
 	public void marquer(Case c){
 		c.miseAJourVoisins(this);

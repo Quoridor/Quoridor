@@ -27,6 +27,22 @@ public class Mur {
 		}
 	}
 	
+	public int getNumeroJoueur() {
+		return numeroJoueur;
+	}
+
+	public void setNumeroJoueur(int numeroJoueur) {
+		this.numeroJoueur = numeroJoueur;
+	}
+
+	public int getSens() {
+		return sens;
+	}
+
+	public void setSens(int sens) {
+		this.sens = sens;
+	}
+
 	public int getI(){
 		if(this.sens==0){
 			if(this.case1.getI()>this.case2.getI()){
@@ -61,5 +77,19 @@ public class Mur {
 			else
 				return case2.getJ();
 		}
+	}
+	
+	public Case getCase1() {
+		return case1;
+	}
+	
+	public Case getCase2() {
+		return case2;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		Mur buf = (Mur) obj;
+		return (((buf.getCase1() == this.case1) && (buf.getCase2() == this.case2)) || ((buf.getCase1() == this.case2) && (buf.getCase2() == this.case1)));
 	}
 }
