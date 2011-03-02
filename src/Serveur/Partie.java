@@ -7,105 +7,141 @@ import java.util.ArrayList;
 import Jeu.Jeu;
 
 public class Partie extends Thread {
-	private BALTimeOut[] threads;
+	private Pipe[] threads;
 	private int nbClients;
 	private String[] clients;
 	private int nb = 0;
 	private int courant = 1;
 	private Jeu jeu;
+	private boolean partie = false;
 	
 	public Partie(int nbclients) {
 		this.nbClients = nbclients;
 		clients = new String[nbClients];
-		threads = new BALTimeOut[nbclients];
+		threads = new Pipe[nbclients];
+		
+		// Noms par défaut
+		for (int i = 0 ; i < nbClients ; i++)
+			clients[i] = "Joueur " + (i+1);
+		
 		jeu = new Jeu(nbClients);
 	}
 	
 	public void addClient(Socket client) {
 		// Création des connexions
-		threads[nb] = new BALTimeOut();
-			
+		threads[nb] = new Pipe(nb + 1);
+	
 		// Thread par client
-		new ServeurThread(client, threads[nb], nb).start();
-		
+		new ServeurThread(client, threads[nb]).start();		
 		nb++;
 		
+		// Avant le début de partie
+		Thread attente = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true)
+					for (int i = 1 ; i <= nb ; i++)
+						requete(threads[i - 1].serveur.tryGetMessage(200), 0, i);											
+			}
+		});		
+		
+		// Premier joueur
+		if (nb == 1)
+			attente.start();
+		
 		// Début de la partie
-		if (nb == nbClients)
+		if (nb == nbClients) {
+			attente.stop();
 			this.start();
+		}			
 	}
 	
 	// Partie
 	@Override
 	public void run() {
-		// Demande des noms
-		for (BALTimeOut b : threads)
-			b.setMessage("3");
-				
+		
 		// Affichage des joueurs
 		System.out.println("Début de partie\n\tJoueurs :");
 		for (String s : clients)
 			System.out.println("\t\t- " + s);
 		
-		
-		
-		// tant que la partie n'est pas finie
+		// Tant que la partie n'est pas finie
 		while (true) {
-			boolean bon = false;
+			boolean bon = true;
 			String req = null;
-			while (req == null) {
+			
+			// Boucle tant que l'on a pas une action du joueur courant
+			while (bon) {
 				// Demande au joueur courant de jouer
-				threads[courant - 1].out.println("2");
+				threads[courant - 1].client.setMessage("2");
+				
 				// Récupération de son coup
-				try {
-					req = threads[courant - 1].in.readLine();
-					requete(req);
-				} catch (IOException e) {
-					System.err.println("Erreur lors de la récupération du coup du joueur " + clients[courant]);
-				}				
-			}
-			System.out.println("Le joueur " + clients[courant - 1] + " veut jouer : " + req);
-			
-			// Etude du coup
-			switch (req)
-			if ()
-			
+				req = threads[courant - 1].serveur.tryGetMessage(2000);
+				bon = !requete(req, 2, courant); // Renvoit true si c'est la requete voulue
+				
+				// Traiter d'autres requetes pour ne pas tout bloquer
+				for (int i = 1 ; i <= nbClients ; i++)
+					if (i != courant)
+						requete(threads[i - 1].serveur.tryGetMessage(2000), 0, i);
+			}					
+						
 			// Changement de joueur
 			courant = courant % nbClients + 1;			
-			
-			try {
-				this.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		}			
 	}
 	
-	public void requete(String req) {
+	public boolean requete(String req, int cmd, int joueur) {
+		if (req == null)
+			return false;
+		
+		// Séparation des valeurs
 		String[] args = req.split(" ");
 		
-		switch (Integer.parseInt(args[0])) {
-		// NOM
-		case(3):
-			if (args.length > 1) {
-				String name = args[1];
-				//System.out.println("Thread " + thread + " : Le client donne son nom : " + name);
+		try {
+			switch (Integer.parseInt(args[0])) {
+			// NOM
+			case(3):
+				if (args.length > 1) {
+					System.out.println("->Le client " + clients[joueur - 1] + " envoie son nom : " + req.substring(2));
+					clients[joueur - 1] = req.substring(2);
+					return (3 == cmd);
+				}
+				break;
+			// MUR
+			case(4):
+				break;
+				
+			// Quitter
+			case(7):
+				System.out.println("->Le client " + clients[joueur - 1] + " quitte !");
+				System.exit(-1);
+			// Chat
+			case(8):
+				if (req.length() <= 2)
+					return false;
+				System.out.println("->Le client " + clients[joueur - 1] + " écrit : " + req.substring(2));
+				for (int i = 0 ; i < nb ; i++)
+					threads[i].client.setMessage("8 " + clients[joueur - 1] + " : " + req.substring(2));
+				break;
+			// Echo
+			case(9):
+				if (req.length() > 2)
+					threads[joueur - 1].client.setMessage(req.substring(2));
+				else
+					threads[joueur - 1].client.setMessage("Echo");
+				break;
+			// Liste joueurs
+			case(10):
+				String buf = "10 ";
+				for (String s : clients)
+					buf += (";" + s);
+				threads[joueur - 1].client.setMessage(buf);
+			default:
+				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));
 			}
-			return;
-		// Quitter
-		case(7):
-			//System.out.println("Thread " + thread + " : Le client quitte");
-			System.exit(-1);
-			return;
-		// Echo
-		case(9):
-			//threads[thread].out.println("Echo : " + args[0]);
-			//threads[thread].notify();
-			return;
-		default:
-			//System.err.println("Numéro de requête invalide : " + cmd);
-	}
-		
+		} catch (NumberFormatException e) {
+			System.err.println("->Requête invalide : " + req);
+		}
+		return false;
 	}
 }

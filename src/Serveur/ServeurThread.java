@@ -10,10 +10,9 @@ import java.net.Socket;
 public class ServeurThread extends Thread {
 	private BufferedReader in;
 	private PrintWriter out;
-	private BALTimeOut pipe;
-	private int num;
+	private Pipe pipe;
 
-	public ServeurThread(Socket client, BALTimeOut pipe, int num) {
+	public ServeurThread(Socket client, Pipe pipe) {
 		try {
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(client.getOutputStream(), true);
@@ -21,12 +20,10 @@ public class ServeurThread extends Thread {
 			e.printStackTrace();
 		}
 		this.pipe = pipe;
-		this.num = num;
 	}
 
 	@Override
-	public void run() {
-		
+	public void run() {		
 		
 		// Thread de lecture
 		Thread lecture = new Thread(new Runnable() {
@@ -34,19 +31,20 @@ public class ServeurThread extends Thread {
 			public void run() {
 				while (true)
 					try {
-						pipe.setMessage(in.readLine());
+						if (in.ready())
+							pipe.serveur.setMessage(in.readLine());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}								
 			}
 		});
+		
 		lecture.start();
 		
 		// Ecriture
-		System.out.println("Thread N°" + num + " lancé...");
+		System.out.println("Thread N°" + pipe.serveur.num + " lancé...");
 		// Envoi des données
-		while (true) {
-			out.println(pipe.getMessage());			
-		}
+		while (true)			
+			out.println(pipe.client.getMessage());
 	}
 }

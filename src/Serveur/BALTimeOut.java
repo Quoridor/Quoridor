@@ -2,6 +2,10 @@ package Serveur;
 
 
 public class BALTimeOut extends BoiteAuxLettres {
+	
+	public BALTimeOut(int num) {
+		super(num);
+	}
 
 	public synchronized boolean trySetMessage(String message, long timeout) {
 		if (message != null) {

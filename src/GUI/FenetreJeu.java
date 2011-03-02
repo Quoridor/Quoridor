@@ -1,34 +1,47 @@
 package GUI;
 
 import java.awt.Toolkit;
+
+import javax.swing.Box;
 import javax.swing.JFrame;
+
+import Jeu.Jeu;
+
 import java.awt.Dimension;
 
 
 public class FenetreJeu extends JFrame {
 	static final long serialVersionUID = 1;
 	
-	public static void main(String[] arg) {
-		Toolkit boiteAOutil = Toolkit.getDefaultToolkit();
-		Dimension dim = boiteAOutil.getScreenSize();
-		int largeurEcran = dim.width;
-		int hauteurEcran = dim.height;
-		int largeurFenetre = largeurEcran/2; //à modifier
-		int hauteurFenetre = hauteurEcran/2; //à modifier
+	public FenetreJeu(Reseau reseau) {
+		super();
 		
-		JFrame fenetreJeu = new JFrame();
-		fenetreJeu.setSize(largeurFenetre, hauteurFenetre);
-		fenetreJeu.setLocation((largeurEcran - largeurFenetre)/2, (hauteurEcran - hauteurFenetre)/2);
-		fenetreJeu.setVisible(true);
-		//fenetreJeu.setContentPane(new Grille());
-<<<<<<< HEAD
-		fenetreJeu.add(new Curseur());
-		fenetreJeu.pack();
-		fenetreJeu.setDefaultCloseOperation(EXIT_ON_CLOSE);
-=======
-		fenetreJeu.add(new Grille());
-		//fenetreJeu.pack();
->>>>>>> 1740c2d2464fe908f6b8154f86cc7df339b59ef5
+		// Fenêtre de jeu
+		this.setPreferredSize(new Dimension(901, 600));
 		
+		Box vbox = Box.createVerticalBox();
+		
+		Boutons boutons = new Boutons();
+		vbox.add(new Boutons());
+		
+		// Alignement horizontal
+		Box hbox = Box.createHorizontalBox();
+		vbox.add(hbox);
+		
+		// Chat
+		Chat chat = new Chat(reseau);
+		
+		// Ajout du controleur à reseau
+		reseau.setControleur(chat.getControleur());
+		
+		Curseur grille = new Curseur();
+		grille.setPreferredSize(getMaximumSize());
+		hbox.add(grille);
+		hbox.add(chat);		
+		
+		this.setContentPane(vbox);
+		this.pack();
+		this.setVisible(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);				
 	}
 }
