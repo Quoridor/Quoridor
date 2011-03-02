@@ -53,6 +53,8 @@ public class Curseur extends JPanel {
                     int coorY = clic.getY()/tailleCase+1;
 
                     System.out.println("x= " + (coorX));
+                    System.out.println("y= " + (coorY));
+
                 }                
             }
             
