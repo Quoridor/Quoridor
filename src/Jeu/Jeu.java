@@ -28,73 +28,79 @@ public class Jeu {
 			}
 		}
 		
+		
+
+		for(int i=0 ; i<11 ; i++)
+		{ 
+			this.listeMurs.add( new Mur(getTabCase()[i][0],getTabCase()[i][1],1));
+			this.listeMurs.add( new Mur(getTabCase()[i][9],getTabCase()[i][10],1));
+		}
+		for(int j=0 ; j<11 ; j++)
+		{ 
+			this.listeMurs.add( new Mur(getTabCase()[0][j],getTabCase()[1][j],1));
+			this.listeMurs.add( new Mur(getTabCase()[9][j],getTabCase()[10][j],1));
+		}
+		
+		
 		for(int i=1; i<=nbJoueur;i++){
 			this.listeJoueurs.add(new Joueur(i,this));
 		}
 		
 		
-		for(int i=0 ; i<11 ; i++)
-		{ 
-			this.listeMurs.add( new Mur(getTabCase()[i][0],getTabCase()[i][1], getListeJoueurs().get(0)));
-			this.listeMurs.add( new Mur(getTabCase()[i][9],getTabCase()[i][10], getListeJoueurs().get(0)));
-		}
-		for(int j=0 ; j<11 ; j++)
-		{ 
-			this.listeMurs.add( new Mur(getTabCase()[0][j],getTabCase()[1][j], getListeJoueurs().get(0)));
-			this.listeMurs.add( new Mur(getTabCase()[9][j],getTabCase()[10][j], getListeJoueurs().get(0)));
-		}
 
 		
 
 	}
 
-	/**
-	 * Fonction de déplacement d'un joueur
-	 * @param joueur Numéro du joueur à déplacer
-	 * @param x		 Abscisse où le déplacer
-	 * @param y		 Ordonnée où le déplacer
-	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
-	 */
+	
 
 
-
-	public boolean deplacer(Joueur joueurDeplace, int i, int j) {
-
+	public boolean deplacer(int numeroJoueur, int i, int j) {
+		Joueur joueurDeplace=this.listeJoueurs.get(numeroJoueur-1);
 		Case caseArrivee = tabCase[i][j];
 		//Tester si caseArrivee est dans la liste des voisins de caseDepart !
 		Case caseDepart = joueurDeplace.getPosition();
-		for(Joueur joueurs : this.listeJoueurs){
-			for(Mur mur : this.listeMurs)
-			{
-				if(this.listeMurs.contains(new Mur(caseDepart,caseArrivee,joueurs))==true | this.listeMurs.contains(new Mur(caseArrivee,caseDepart,joueurs))==true)
-					return false;
-			}
 
-			if(caseArrivee.getJoueur()!=null)
-			{ System.out.println(j+caseArrivee.getJ()-caseDepart.getJ());
-				Case caseSaut = tabCase[i+caseArrivee.getI()-caseDepart.getI()][j+caseArrivee.getJ()-caseDepart.getJ()];
-				return deplacer(caseArrivee.getJoueur(), caseSaut.getI(), caseSaut.getJ());
-			}
-
+		if(!caseDepart.getListeVoisins().contains(caseArrivee))
+		{
+			return false;
 		}
+		else
+		{
+			for(Joueur joueurs : this.listeJoueurs){
+					if(this.listeMurs.contains(new Mur(caseDepart,caseArrivee,joueurs.getNumeroJoueur()))==true | this.listeMurs.contains(new Mur(caseArrivee,caseDepart,joueurs.getNumeroJoueur()))==true)
+						return false;
 
+				if(caseArrivee.getJoueur()!=null)
+				{ 
+				Case caseSaut = tabCase[i+caseArrivee.getI()-caseDepart.getI()][j+caseArrivee.getJ()-caseDepart.getJ()];
+				return deplacer(caseArrivee.getJoueur().getNumeroJoueur(), caseSaut.getI(), caseSaut.getJ());
+				}
+
+			}
+		}
 		return  true;
 	}
 
 
 
-	/**
-	 * Fonction d'ajout de mur
-	 * @param joueur Numéro du joueur qui veut construire le mur
-	 * @param sens   Sens du mur : vertical=true, horizontal=false
-	 * @param x		 Abscisse du coin haut gauche
-	 * @param y		 Ordonnée du coin haut gauche
-	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
-	 */
-	public boolean mur(int joueur, boolean sens, int x, int y) {
+	
+	public boolean mur(int numeroJoueur, boolean sens, int x, int y) {
+		
+		
+		
 		return true;
 	}
 
+	public void poseMur(sens boolean ,int x , int y){
+		Case ici = this.tabCase[x][y];
+		
+		if()
+		
+	}
+	
+	
+	
 	public void marquer(Case c){
 		c.miseAJourVoisins(this);
 		c.setMarque(true);
@@ -107,10 +113,16 @@ public class Jeu {
 
 	}
 
-	/**
-	 * Test si la partie est finie
-	 * @return 		 Renvoie le numéro du joueur gagnant ou 0 si la partie est en cours
-	 */
+	public void demarquer(){
+
+		for(int i=0 ; i<11 ; i++)
+		{ 
+			for(int j=0 ; j<11 ; j++)
+			{ 
+				tabCase[i][j].setMarque(false);}}
+	}
+
+	
 	public int victoire() {
 
 		return 0;
@@ -144,11 +156,11 @@ public class Jeu {
 	public static void main(String[] argv){
 		Jeu jeu = new Jeu(2);
 		System.out.println(jeu.getListeJoueurs().get(1).getPosition().getI());
-		if (jeu.deplacer(jeu.getListeJoueurs().get(1),4,1)) {
+		if (jeu.deplacer(1,2,5)) {
 			System.out.println("coucou");
 		}
-		jeu.getListeJoueurs().get(0).setPosition(jeu.getTabCase()[4][2]);
-		if (jeu.deplacer(jeu.getListeJoueurs().get(1),4,2)){
+		jeu.getListeJoueurs().get(0).setPosition(jeu.getTabCase()[4][2], jeu);
+		if (jeu.deplacer(1,4,2)){
 			System.out.println("sjklfjskl");
 		}
 	}

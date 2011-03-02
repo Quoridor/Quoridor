@@ -51,23 +51,23 @@ public class Case {
 
 
 public void miseAJourVoisins(Jeu jeu){
-	this.setListeVoisins(null);
+	this.setListeVoisins(new ArrayList<Case>());
 	
 	for(Joueur joueur : jeu.getListeJoueurs()){
 
-		if( (jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()-1][this.getJ()], joueur))) | (jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()-1][this.getJ()], this, joueur)))){
+		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()-1][this.getJ()], joueur.getNumeroJoueur()))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()-1][this.getJ()], this, joueur.getNumeroJoueur())))){
 			this.listeVoisins.add(jeu.getTabCase()[this.getI()-1][this.getJ()]);
 		}
 
-		if( (jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()+1][this.getJ()], joueur))) | (jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()+1][this.getJ()], this, joueur)))){
+		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()+1][this.getJ()], joueur.getNumeroJoueur()))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()+1][this.getJ()], this, joueur.getNumeroJoueur())))){
 			this.listeVoisins.add(jeu.getTabCase()[this.getI()+1][this.getJ()]);
 		}
 
-		if( (jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()-1], joueur))) | (jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()-1], this, joueur)))){
+		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()-1], joueur.getNumeroJoueur()))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()-1], this, joueur.getNumeroJoueur())))){
 			this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()-1]);
 		}	
 
-		if( (jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()+1], joueur))) | (jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()+1], this, joueur)))){
+		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()+1], joueur.getNumeroJoueur()))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()+1], this, joueur.getNumeroJoueur())))){
 			this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()+1]);
 		}
 
