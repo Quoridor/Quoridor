@@ -17,7 +17,7 @@ public class FenetreJeu extends JFrame {
 		super();
 		
 		// Fenêtre de jeu
-		this.setPreferredSize(new Dimension(900, 600));
+		this.setPreferredSize(new Dimension(901, 600));
 		
 		Box vbox = Box.createVerticalBox();
 		
