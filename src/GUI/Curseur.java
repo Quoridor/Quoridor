@@ -1,5 +1,6 @@
 package GUI;
 
+import java.awt.Component;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -8,51 +9,81 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JPanel;
 
 
-public class Curseur extends JPanel{
-	
-	int abscisse;
-	int ordonnee;
-	Image img;
-	int tailleCase=40;
-	
-    Curseur() {
-    	setPreferredSize(new Dimension(400,400));
-    	Toolkit tk = Toolkit.getDefaultToolkit();
-		img = tk.getImage("images/pion.gif");
-		
-    	addMouseMotionListener(new MouseMotionAdapter() {
-    		public void mouseMoved (MouseEvent evt) {
-    			abscisse = evt.getX();
-    			ordonnee = evt.getY(); 
-    			repaint();
-    			
-    				
-    		}
-    	});
-    }
 
-    public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g.fillRect(0, 0, 32, 32 /*dans la fenetre*/);
-		g.setColor(Color.WHITE);
-		g.fillRect(tailleCase,tailleCase,9*tailleCase,9*tailleCase);
-		g.setColor(Color.BLACK);
-		for (int i= 1; i < 11; i++) {
-			g.drawLine(tailleCase, i*tailleCase, 10*tailleCase, i*tailleCase);			
-			g.drawLine(i*tailleCase, tailleCase, i*tailleCase, 10*tailleCase);
-		}
-		for (int k=0; k<9; k++){
-			for (int j=0; j<9; j++){
-				if ((abscisse<((k+2)*tailleCase))&&(abscisse>((k+1)*tailleCase))&&(ordonnee<((j+2)*tailleCase))&&(ordonnee>((j+1)*tailleCase))/*position relative dans la fenetre*/){
-					g.drawImage(img,(k+1)*tailleCase,(j+1)*tailleCase,this);
-				}
-			}
-		}
-		}
+public class Curseur extends JPanel {
+
+      
+        private int abscisse;
+        private int ordonnee;
+        private int tailleCase=40;
+        private int fonction=1;
+       
+        Curseur() {
+        	
+            setPreferredSize(new Dimension(400,400));
+            addMouseMotionListener(new MouseMotionAdapter() {
+                public void mouseMoved (MouseEvent clic) {
+                	if ((clic.getX() > (fonction==3 ? tailleCase : 0)) &&
+                        	(clic.getX() < (fonction==2 ? 8 : 9)*tailleCase) &&
+                        	(clic.getY() > (fonction==2 ? tailleCase : 0)) &&
+                        	(clic.getY() < (fonction==3 ? 8 : 9)*tailleCase)) {
+                		abscisse = clic.getX();
+                		ordonnee = clic.getY();
+                    	repaint();   
+                	
+                    }
+                }
+            });
+       
+        addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent clic) {
+                if ((clic.getX() > 0) &&
+                	(clic.getX() < 9*tailleCase) &&
+                	(clic.getY() > 0) &&
+                	(clic.getY() < 9*tailleCase)) {
+                	//switch ()
+                    int coorX = clic.getX()/tailleCase+1;
+                    int coorY = clic.getY()/tailleCase+1;
+
+                    System.out.println("x= " + (coorX));
+                    System.out.println("y= " + (coorY));
+
+                }                
+            }
+            
+        });
+        }
+        
+        public void ChangeFonction(int parametre) { //à modifier
+        	fonction = parametre;
+        }
+        
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);     
+            g.setColor(Color.RED);
+            g.fillRect(0,0,9*tailleCase,9*tailleCase);
+            g.setColor(Color.BLACK);
+            for (int i= 0; i < 10; i++) {
+                g.drawLine(0, i*tailleCase, 9*tailleCase, i*tailleCase);           
+                g.drawLine(i*tailleCase, 0, i*tailleCase, 9*tailleCase);
+            }
+            switch(fonction) {
+                case 1:
+                                g.fillOval((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase,tailleCase,tailleCase);
+                break;
+                case 2:
+                                g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-5,80,11);
+                break;
+                case 3:
+                                g.fillRect((abscisse/tailleCase)*tailleCase-5,(ordonnee/tailleCase)*tailleCase,11,80);
+                break;
+            }
+        }
 }

@@ -166,8 +166,8 @@ public class Reseau extends Observable{
 	 * @param y		 Ordonnée où le déplacer
 	 * @return		 Renvoie true si l'action est réalisée et réalisable false sinon
 	 */
-	public boolean deplacer(int x, int y) {
-		return true;
+	public void deplacer(int x, int y) {
+		out.println("6 " + x + " " + y);
 	}
 	
 	/**
