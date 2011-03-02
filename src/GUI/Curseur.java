@@ -20,40 +20,42 @@ import javax.swing.JPanel;
 public class Curseur extends JPanel {
 
       
-        int abscisse;
-        int ordonnee;
-        Image img;
-        int tailleCase=40;
-        int fonction=1;
+        private int abscisse;
+        private int ordonnee;
+        private int tailleCase=40;
+        private int fonction=1;
        
         Curseur() {
+        	
             setPreferredSize(new Dimension(400,400));
-            Toolkit tk = Toolkit.getDefaultToolkit();
-            switch(fonction)
-            {
-            case 1: img = tk.getImage("images/pion.gif"); break;
-            case 2: img = tk.getImage("images/wallh.gif"); break;
-            case 3: img = tk.getImage("images/wallv.gif"); break;
-            }
             addMouseMotionListener(new MouseMotionAdapter() {
-                public void mouseMoved (MouseEvent evt) {
-                    abscisse = evt.getX();
-                    ordonnee = evt.getY();
-                    repaint();                       
+                public void mouseMoved (MouseEvent clic) {
+                	if ((clic.getX() > (fonction==3 ? tailleCase : 0)) &&
+                        	(clic.getX() < (fonction==2 ? 8 : 9)*tailleCase) &&
+                        	(clic.getY() > (fonction==2 ? tailleCase : 0)) &&
+                        	(clic.getY() < (fonction==3 ? 8 : 9)*tailleCase)) {
+                		abscisse = clic.getX();
+                		ordonnee = clic.getY();
+                    	repaint();   
+                	
+                    }
                 }
             });
        
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent clic) {
-                if ((clic.getX()>40)&&(clic.getX()<400)) {
-                    int coorX = clic.getX()/tailleCase;
+                if ((clic.getX() > 0) &&
+                	(clic.getX() < 9*tailleCase) &&
+                	(clic.getY() > 0) &&
+                	(clic.getY() < 9*tailleCase)) {
+                	//switch ()
+                    int coorX = clic.getX()/tailleCase+1;
+                    int coorY = clic.getY()/tailleCase+1;
+
                     System.out.println("x= " + (coorX));
-                }
-                if ((clic.getY()>40)&&(clic.getY()<400)) {
-                    int coorY = clic.getY()/tailleCase;
-                    System.out.println("y= " + (coorY));
-                }
+                }                
             }
+            
         });
         }
         
@@ -64,40 +66,22 @@ public class Curseur extends JPanel {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);     
             g.setColor(Color.RED);
-            g.fillRect(tailleCase,tailleCase,9*tailleCase,9*tailleCase);
+            g.fillRect(0,0,9*tailleCase,9*tailleCase);
             g.setColor(Color.BLACK);
-            for (int i= 1; i < 11; i++) {
-                g.drawLine(tailleCase, i*tailleCase, 10*tailleCase, i*tailleCase);           
-                g.drawLine(i*tailleCase, tailleCase, i*tailleCase, 10*tailleCase);
+            for (int i= 0; i < 10; i++) {
+                g.drawLine(0, i*tailleCase, 9*tailleCase, i*tailleCase);           
+                g.drawLine(i*tailleCase, 0, i*tailleCase, 9*tailleCase);
             }
             switch(fonction) {
                 case 1:
-                    for (int k=0; k<9; k++){
-                        for (int j=0; j<9; j++){
-                            if ((abscisse<((k+2)*tailleCase))&&(abscisse>((k+1)*tailleCase))&&(ordonnee<((j+2)*tailleCase))&&(ordonnee>((j+1)*tailleCase))/*position relative dans la fenetre*/){
-                                g.fillOval((k+1)*tailleCase,(j+1)*tailleCase,tailleCase,tailleCase);
-                            }
-                        }
-                    }
+                                g.fillOval((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase,tailleCase,tailleCase);
                 break;
                 case 2:
-                    for (int k=0; k<8; k++){
-                        for (int j=1; j<9; j++){
-                            if ((abscisse<((k+2)*tailleCase))&&(abscisse>((k+1)*tailleCase))&&(ordonnee<((j+2)*tailleCase))&&(ordonnee>((j+1)*tailleCase))/*position relative dans la fenetre*/){
-                                g.fillRect((k+1)*tailleCase,(j+1)*tailleCase-5,80,11);
-                            }
-                        }
-                    }
+                                g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-5,80,11);
                 break;
                 case 3:
-                    for (int k=1; k<9; k++){
-                        for (int j=0; j<8; j++){
-                            if ((abscisse<((k+2)*tailleCase))&&(abscisse>((k+1)*tailleCase))&&(ordonnee<((j+2)*tailleCase))&&(ordonnee>((j+1)*tailleCase))/*position relative dans la fenetre*/){
-                                g.fillRect((k+1)*tailleCase-5,(j+1)*tailleCase,11,80);
-                            }
-                        }
-                    }
+                                g.fillRect((abscisse/tailleCase)*tailleCase-5,(ordonnee/tailleCase)*tailleCase,11,80);
+                break;
             }
         }
-   
 }
