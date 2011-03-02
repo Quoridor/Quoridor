@@ -21,12 +21,11 @@ public class FenetreJeu extends JFrame {
 		
 		Box vbox = Box.createVerticalBox();
 		
-		Boutons boutons = new Boutons();
-		vbox.add(new Boutons());
+		
 		
 		// Alignement horizontal
 		Box hbox = Box.createHorizontalBox();
-		vbox.add(hbox);
+		
 		
 		// Chat
 		Chat chat = new Chat(reseau);
@@ -36,6 +35,13 @@ public class FenetreJeu extends JFrame {
 		
 		Curseur grille = new Curseur();
 		grille.setPreferredSize(getMaximumSize());
+		
+		ControleurBoutons controleurBoutons = new ControleurBoutons(grille);
+				
+		Boutons boutons = new Boutons(controleurBoutons);
+		vbox.add(boutons);
+		vbox.add(hbox);
+		
 		hbox.add(grille);
 		hbox.add(chat);		
 		
