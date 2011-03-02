@@ -109,8 +109,17 @@ public class Partie extends Thread {
 					return (3 == cmd);
 				}
 				break;
-			// MUR
+			// MURH
 			case(4):
+				System.out.println("->Le client " + clients[joueur - 1] + " veut mettre un mur horizontal en (" + Integer.parseInt(args[1]) + "," + Integer.parseInt(args[2]) + ")");
+				break;
+			// MURV
+			case(5):
+				System.out.println("->Le client " + clients[joueur - 1] + " veut mettre un mur vertical en (" + Integer.parseInt(args[1]) + "," + Integer.parseInt(args[2]) + ")");
+				break;
+			// DEPLACER
+			case(6):
+				System.out.println("->Le client " + clients[joueur - 1] + " veut se déplacer en (" + Integer.parseInt(args[1]) + "," + Integer.parseInt(args[2]) + ")");
 				break;
 				
 			// Quitter

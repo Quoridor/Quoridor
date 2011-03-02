@@ -92,10 +92,8 @@ public class Jeu {
 		return true;
 	}
 
-	public void poseMur(sens boolean ,int x , int y){
+	public void poseMur(boolean sens  ,int x , int y){
 		Case ici = this.tabCase[x][y];
-		
-		if()
 		
 	}
 	

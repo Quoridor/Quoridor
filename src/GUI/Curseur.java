@@ -12,9 +12,8 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-
 import javax.swing.JPanel;
-
+import Jeu.*;
 
 
 public class Curseur extends JPanel {
@@ -31,12 +30,12 @@ public class Curseur extends JPanel {
         private int fonction=1;
                
         // Etat
-        private boolean actif = false;
+        private boolean actif = true;
         
         // Reseau
         private Reseau reseau;
         
-        Curseur(Reseau reseau) {
+        Curseur(final Reseau reseau) {
         	// Reseau
         	this.reseau = reseau;
         	
@@ -68,7 +67,19 @@ public class Curseur extends JPanel {
                     int coorY = clic.getY()/tailleCase+1;
                 	
                 	// Envoi
-                	switch ()              	
+                	switch (fonction) {
+                	case(1):
+                		reseau.deplacer(coorX, coorY);
+                		break;
+                	case(2):
+                		reseau.mur(false, coorX, coorY);
+                		break;
+                	case(3):
+                		reseau.mur(true, coorX, coorY);
+            			break;
+                	}
+                	
+                	actif = false;
 
 
                     System.out.println("x= " + (coorX));
@@ -99,7 +110,43 @@ public class Curseur extends JPanel {
             }
             
             // Affichage du jeu
-            //...            
+            for(Joueur J : reseau.getJeu().getListeJoueurs()) {
+            	switch(J.getNumeroJoueur()) {
+            		case 1 :
+            			g.setColor(Color.CYAN);
+            	    	break;
+            	    case 3 : 
+            			g.setColor(Color.YELLOW);
+            	        break;
+            	    case 2 : 
+            			g.setColor(Color.PINK);
+            	    	break;
+            	    case 4 : 
+            			g.setColor(Color.ORANGE);
+            			break;
+            	}
+            	g.fillOval(J.getPosition().getI(),J.getPosition().getJ(),tailleCase,tailleCase);
+            }
+            for(Mur M : reseau.getJeu().getListeMurs()) {
+            	switch(M.getNumeroJoueur()) {
+            		case 1 : 
+            			g.setColor(Color.CYAN);
+            	    	break;
+            		case 3 : 
+            			g.setColor(Color.YELLOW);
+            			break;
+            		case 2 : 
+            			g.setColor(Color.PINK);
+            	        break;
+            	    case 4 : 
+            			g.setColor(Color.ORANGE);
+            			break;
+            	}
+            	if(M.getSens()==0)
+            		g.fillRect(M.getI(), M.getJ()-5, tailleCase, 11);
+            	else
+            		g.fillRect(M.getI()-5,M.getJ(), 11, tailleCase);
+            }           
             
             // Curseur si etat actif
             if (actif) {

@@ -56,11 +56,11 @@ public class FenetreConnexion extends JFrame implements ActionListener{
 		try {
 			Reseau reseau = new Reseau(serveur.getText(), (Integer) port.getValue(), nom.getText());
 			
-			// Cacher la fenetre de connexion
-			this.setVisible(false);
-			
 			// Lancement du jeu
-			new FenetreJeu(reseau);			
+			new FenetreJeu(reseau);		
+			
+			// Cacher la fenetre de connexion
+			this.setVisible(false);				
 		}
 		catch (Exception e) {			
 			JOptionPane.showMessageDialog(null, "Impossible de joindre le serveur", "Erreur de connexion", JOptionPane.ERROR_MESSAGE);

@@ -30,7 +30,7 @@ public class FenetreJeu extends JFrame {
 		// Ajout du controleur à reseau
 		reseau.setControleur(chat.getControleur());
 		
-		Curseur grille = new Curseur();
+		Curseur grille = new Curseur(reseau);
 		grille.setPreferredSize(getMaximumSize());
 		
 		ControleurBoutons controleurBoutons = new ControleurBoutons(grille);

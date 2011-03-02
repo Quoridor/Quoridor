@@ -83,8 +83,7 @@ public class Reseau extends Observable{
 			case(3):
 				System.out.println("->Le serveur demande mon nom");
 				envoyerNom(nom);				
-				break;// Cacher la fenetre de connexion
-				this.setVisible(false);
+				break;
 			// MURH
 			case(4):
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur horizontal en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
