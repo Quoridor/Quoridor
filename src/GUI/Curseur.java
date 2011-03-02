@@ -111,45 +111,22 @@ public class Curseur extends JPanel {
             
             // Affichage du jeu
             for(Joueur J : reseau.getJeu().getListeJoueurs()) {
-            	switch(J.getNumeroJoueur()) {
-            		case 1 :
-            			g.setColor(Color.CYAN);
-            	    	break;
-            	    case 3 : 
-            			g.setColor(Color.YELLOW);
-            	        break;
-            	    case 2 : 
-            			g.setColor(Color.PINK);
-            	    	break;
-            	    case 4 : 
-            			g.setColor(Color.ORANGE);
-            			break;
-            	}
-            	g.fillOval(J.getPosition().getI(),J.getPosition().getJ(),tailleCase,tailleCase);
+            	couleur(g, J.getNumeroJoueur());
+            	g.fillOval((J.getPosition().getI() - 1)*tailleCase, (J.getPosition().getJ() - 1)*tailleCase, tailleCase, tailleCase);
             }
-            for(Mur M : reseau.getJeu().getListeMurs()) {
-            	switch(M.getNumeroJoueur()) {
-            		case 1 : 
-            			g.setColor(Color.CYAN);
-            	    	break;
-            		case 3 : 
-            			g.setColor(Color.YELLOW);
-            			break;
-            		case 2 : 
-            			g.setColor(Color.PINK);
-            	        break;
-            	    case 4 : 
-            			g.setColor(Color.ORANGE);
-            			break;
-            	}
+            /*for(Mur M : reseau.getJeu().getListeMurs()) {
+            	couleur(g, M.getNumeroJoueur());
             	if(M.getSens()==0)
             		g.fillRect(M.getI(), M.getJ()-5, tailleCase, 11);
             	else
             		g.fillRect(M.getI()-5,M.getJ(), 11, tailleCase);
-            }           
+            }*/
+            
+            
             
             // Curseur si etat actif
             if (actif) {
+            	couleur(g, reseau.getJoueur());
 	            switch(fonction) {
 	                case 1:
 	                	g.fillOval((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase,tailleCase,tailleCase);
@@ -163,4 +140,21 @@ public class Curseur extends JPanel {
 	            }
             }
         }
+        
+        public void couleur(Graphics g, int couleur) {
+        	switch(couleur) {
+        		case 1 :
+        			g.setColor(Color.CYAN);
+        			break;
+        		case 3 : 
+        			g.setColor(Color.YELLOW);
+        			break;
+        		case 2 : 
+        			g.setColor(Color.PINK);
+        			break;
+        		case 4 : 
+        			g.setColor(Color.ORANGE);
+        			break;
+        	}
+        }        
 }

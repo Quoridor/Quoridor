@@ -221,7 +221,7 @@ public class Reseau extends Observable{
 		
 		// Un fois le controleur mis on le signale
 		controleur.ecrire("->Connexion réussie");
-		out.println("8 Je vient de me connecter");
+		out.println("8 Je viens de me connecter");
 	}
 	
 	public Jeu getJeu() {
