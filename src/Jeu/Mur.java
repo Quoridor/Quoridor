@@ -6,10 +6,6 @@ public class Mur {
 	private Case case1;
 	private Case case2;
 	private int sens;
-	private int i;
-	private int j;
-	
-
 	
 	public Mur(Case case1,Case case2, int numeroJoueur){
 		this.case1=case1;
@@ -20,10 +16,10 @@ public class Mur {
 	
 	public void calculerSens(){
 		if(this.case1.getI()==this.case2.getI()){
-			this.sens=1;
+			this.sens=0;
 		}
 		if(this.case1.getJ()==this.case2.getJ()){
-			this.sens=0;
+			this.sens=1;
 		}
 	}
 	
@@ -44,7 +40,7 @@ public class Mur {
 	}
 
 	public int getI(){
-		if(this.sens==0){
+		if(this.sens==1){
 			if(this.case1.getI()>this.case2.getI()){
 				return case1.getI();
 			}
@@ -62,7 +58,7 @@ public class Mur {
 	}
 	
 	public int getJ(){
-		if(this.sens==0){
+		if(this.sens==1){
 			if(this.case1.getI()>this.case2.getI()){
 				return case1.getJ();
 			}

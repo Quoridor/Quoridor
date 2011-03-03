@@ -51,31 +51,31 @@ public class Case {
 
 
 public void miseAJourVoisins(Jeu jeu){
-	this.setListeVoisins(new ArrayList<Case>());
+	this.listeVoisins = new ArrayList<Case>();
 	
 	// Haut
-	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()-1][this.getJ()], 0))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()-1][this.getJ()], this, 0)))){
+	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()-1][this.getJ()], 0)))){
 		this.listeVoisins.add(jeu.getTabCase()[this.getI()-1][this.getJ()]);
-		System.out.println("haut");
+		//System.out.println("haut");
 	}
 
 	// Bas
-	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()+1][this.getJ()], 0))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()+1][this.getJ()], this, 0)))){
+	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()+1][this.getJ()], 0)))){
 		this.listeVoisins.add(jeu.getTabCase()[this.getI()+1][this.getJ()]);
-		System.out.println("bas");
+		//System.out.println("bas");
 		
 	}
 
 	// Gauche
-	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()-1], 0))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()-1], this, 0)))){
+	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()-1], 0)))){
 		this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()-1]);
-		System.out.println("gauche");
+		//System.out.println("gauche");
 	}	
 
 	// Droite
-	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()+1], 0))) && !(jeu.getListeMurs().contains(new Mur(jeu.getTabCase()[this.getI()][this.getJ()+1], this, 0)))){
+	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()+1], 0)))){
 		this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()+1]);
-		System.out.println("droite");
+		//System.out.println("droite");
 	}
 	
 }

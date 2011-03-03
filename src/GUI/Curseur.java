@@ -117,7 +117,7 @@ public class Curseur extends JPanel {
         
         // Grille
         g.setColor(Color.BLACK);
-        for (int i= 0; i < 10; i++) {
+        for (int i=0; i < 10; i++) {
             g.drawLine(0, i*tailleCase, 9*tailleCase, i*tailleCase);           
             g.drawLine(i*tailleCase, 0, i*tailleCase, 9*tailleCase);
         }
@@ -130,13 +130,16 @@ public class Curseur extends JPanel {
         }
         // Murs
         for(Mur M : reseau.getJeu().getListeMurs()) {
-        	couleur(g, M.getNumeroJoueur());
-        	if(M.getSens() == 0)
-        		g.fillRect(M.getI(), M.getJ()-5, tailleCase, 11);
-        	else
-        		g.fillRect(M.getI()-5,M.getJ(), 11, tailleCase);
-        }          
-        
+        	// Si c'est les murs de base
+        	//if (M.getNumeroJoueur() != 0) {
+	        	couleur(g, M.getNumeroJoueur());
+	        	if(M.getSens() == 0)
+	        		// Horizontal
+	        		g.fillRect((M.getI()-1)*tailleCase, (M.getJ()-1)*tailleCase-5, tailleCase, 11);
+	        	else
+	        		g.fillRect((M.getI()-1)*tailleCase-5,(M.getJ()-1)*tailleCase, 11, tailleCase);
+	        //}          
+        }
         
         // Curseur si etat actif
         if (actif) {

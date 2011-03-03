@@ -29,18 +29,24 @@ public class Jeu {
 		}
 
 
-
-		for(int i=0 ; i<11 ; i++)
+		for(int i=0 ; i<10 ; i++)
 		{ 
-			this.listeMurs.add( new Mur(getTabCase()[i][0],getTabCase()[i][1],1));
-			this.listeMurs.add( new Mur(getTabCase()[i][9],getTabCase()[i][10],1));
+			this.listeMurs.add( new Mur(getTabCase()[i][0],getTabCase()[i][1], 0));
+			this.listeMurs.add( new Mur(getTabCase()[i][9],getTabCase()[i][10], 0));
 		}
-		for(int j=0 ; j<11 ; j++)
+		for(int j=0 ; j<10 ; j++)
 		{ 
-			this.listeMurs.add( new Mur(getTabCase()[0][j],getTabCase()[1][j],1));
-			this.listeMurs.add( new Mur(getTabCase()[9][j],getTabCase()[10][j],1));
+			this.listeMurs.add( new Mur(getTabCase()[0][j],getTabCase()[1][j], 0));
+			this.listeMurs.add( new Mur(getTabCase()[9][j],getTabCase()[10][j], 0));
 		}
 
+		this.listeMurs.add( new Mur(getTabCase()[9][4],getTabCase()[9][5], 3));
+		this.listeMurs.add( new Mur(getTabCase()[2][5],getTabCase()[2][6], 3));
+		poseMur(1, 1, 2, 5);
+		poseMur(1, 0, 2, 5);
+		
+		for (Mur m : listeMurs)
+			System.out.println(m.getI() + "," + m.getJ() + " " +  m.getSens());
 
 		for(int i=1; i<=nbJoueur;i++){
 			Joueur J = new Joueur(i,this);
@@ -93,9 +99,6 @@ public class Jeu {
 			}
 		}
 
-
-
-
 	public boolean mur(int numeroJoueur, int sens, int i, int j) {
 		boolean b[] = new boolean[this.nbJoueur];
 		for (boolean booleen : b){
@@ -114,24 +117,26 @@ public class Jeu {
 			this.demarquer();
 
 		}
-		if(!(b[0]&&b[1]&&b[2]&&b[3])){
+		if(!(this.nbJoueur == 4 ? (b[0]&&b[1]&&b[2]&&b[3]) : b[0]&&b[1])) {
 			this.retirerMur(numeroJoueur, sens, i, j);
 		}
-		return(b[0]&&b[1]&&b[2]&&b[3]);
+		return((this.nbJoueur == 4 ? (b[0]&&b[1]&&b[2]&&b[3]) : b[0]&&b[1]));
 	}
-
+	
 	public void poseMur(int numeroJoueur, int sens, int i , int j){
-		Case ici = this.tabCase[i][j];
-		if(sens==0){
-			this.listeMurs.add(new Mur(ici,this.getTabCase()[i-1][j], numeroJoueur));
-			this.listeMurs.add(new Mur(this.getTabCase()[i][j+1],this.getTabCase()[i-1][j+1], numeroJoueur));
+			
+		if(sens==1){
+			
+			Case ici = this.tabCase[i][j];	
+			this.listeMurs.add(new Mur(ici,this.tabCase[i-1][j], numeroJoueur));
+			this.listeMurs.add(new Mur(this.tabCase[i][j+1],this.tabCase[i-1][j+1], numeroJoueur));
 		}
-		else
-			if (sens==1){
-				this.listeMurs.add(new Mur(ici,this.getTabCase()[i][j-1], numeroJoueur));
-				this.listeMurs.add(new Mur(this.getTabCase()[i+1][j],this.getTabCase()[i+1][j-1], numeroJoueur));
-			}
-
+		else {
+			
+			Case ici = this.tabCase[i][j];	
+			this.listeMurs.add(new Mur(ici,this.tabCase[i][j-1], numeroJoueur));
+			this.listeMurs.add(new Mur(this.tabCase[i+1][j],this.tabCase[i+1][j-1], numeroJoueur));
+		}
 	}
 
 	private void retirerMur(int numeroJoueur, int sens, int i , int j){
@@ -173,7 +178,9 @@ public class Jeu {
 
 
 	public int victoire() {
-
+		for(Joueur j : this.listeJoueurs)
+			{if(j.getListeCasesArrivee().contains(j.getPosition()))
+					return j.getNumeroJoueur();}
 		return 0;
 	}	
 
@@ -211,7 +218,7 @@ public class Jeu {
 		if (jeu.deplacer(1,8,5)) {
 			System.out.println("coucou");
 		}
-		jeu.getListeJoueurs().get(0).setPosition(jeu.getTabCase()[4][2], jeu);
+		jeu.getListeJoueurs().get(0).setPosition(jeu.getTabCase()[8][5], jeu);
 		if (jeu.deplacer(1,4,2)){
 			System.out.println("sjklfjskl");
 		}

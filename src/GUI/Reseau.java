@@ -103,7 +103,7 @@ public class Reseau extends Observable{
 			case(5):
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur vertical en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
 				if (args.length == 4)
-					jeu.mur(Integer.parseInt(args[1]), 1, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					jeu.poseMur(Integer.parseInt(args[1]), 1, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 				else
 					throw new Exception();
 				break;

@@ -48,7 +48,6 @@ public class Partie extends Thread {
 					while (true) {
 						for (int i = 1 ; i <= nb ; i++) {
 							requete(threads[i - 1].serveur.tryGetMessage(20), 0, i);
-							System.out.println("Méchant Thread !!");
 						}
 					}
 				}
@@ -134,13 +133,52 @@ public class Partie extends Thread {
 			// MURH
 			case(4):
 				System.out.println("->Le client " + clients[joueur - 1] + " veut mettre un mur horizontal en (" + Integer.parseInt(args[1]) + "," + Integer.parseInt(args[2]) + ")");
-				jeu.mur(joueur, 0, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-				break;
+				// Si ce n'est pas son tour
+				if (courant != joueur) {
+					System.out.println("->Ce n'est pas le tour de " + clients[joueur - 1] + "!");
+					return false;
+				}
+				
+				// Cas où le coup est valide
+				if (jeu.mur(joueur, 0, Integer.parseInt(args[1]), Integer.parseInt(args[2]))) {
+					System.out.println("->Le coup du joueur " + clients[joueur - 1] + " est valide");
+					// On le dit à tout le monde
+					for (Pipe t : threads)
+						if (t != null) //TODO remove lors de la production
+							t.client.setMessage("4 " + joueur + " " + args[1] + " " + args[2]);
+					// On dit au client que ce n'est plus son tour
+					threads[joueur - 1].client.setMessage("13");
+					return true;
+				}
+				// Sinon
+				System.out.println("->Le coup du joueur " + clients[joueur - 1] + " est invalide !");
+				return false;
+			
+			
+			
 			// MURV
 			case(5):
 				System.out.println("->Le client " + clients[joueur - 1] + " veut mettre un mur vertical en (" + Integer.parseInt(args[1]) + "," + Integer.parseInt(args[2]) + ")");
-				jeu.mur(joueur, 1, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-				break;
+				// Si ce n'est pas son tour
+				if (courant != joueur) {
+					System.out.println("->Ce n'est pas le tour de " + clients[joueur - 1] + "!");
+					return false;
+				}
+				
+				// Cas où le coup est valide
+				if (jeu.mur(joueur, 1, Integer.parseInt(args[1]), Integer.parseInt(args[2]))) {
+					System.out.println("->Le coup du joueur " + clients[joueur - 1] + " est valide");
+					// On le dit à tout le monde
+					for (Pipe t : threads)
+						if (t != null) //TODO remove lors de la production
+							t.client.setMessage("5 " + joueur + " " + args[1] + " " + args[2]);
+					// On dit au client que ce n'est plus son tour
+					threads[joueur - 1].client.setMessage("13");
+					return true;
+				}
+				// Sinon
+				System.out.println("->Le coup du joueur " + clients[joueur - 1] + " est invalide !");
+				return false;			
 				
 			//---------	
 			// DEPLACER
@@ -162,7 +200,7 @@ public class Partie extends Thread {
 							t.client.setMessage("6 " + joueur + " " + args[1] + " " + args[2]);
 					// Problème de requete de jeu envoyée
 					threads[joueur - 1].client.setMessage("13");
-					return (cmd == 6);
+					return true;
 				}
 				// Sinon
 				System.out.println("->Le coup du joueur " + clients[joueur - 1] + " est invalide !");
