@@ -11,9 +11,9 @@ public class Partie extends Thread {
 	private int nbClients;
 	private String[] clients;
 	private int nb = 0;
-	private int courant = 1;
+	private int courant = 0;//TODO A changer à 0 lors de la mise en production
 	private Jeu jeu;
-	private boolean partie = false;
+	private Thread attente;
 	
 	public Partie(int nbclients) {
 		this.nbClients = nbclients;
@@ -22,7 +22,7 @@ public class Partie extends Thread {
 		
 		// Noms par défaut
 		for (int i = 0 ; i < nbClients ; i++)
-			clients[i] = "Joueur " + (i+1);
+			clients[i] = "Emplacement libre " + (i+1);
 		
 		jeu = new Jeu(nbClients);
 	}
@@ -35,32 +35,47 @@ public class Partie extends Thread {
 		new ServeurThread(client, threads[nb]).start();		
 		nb++;
 		
-		// Avant le début de partie
-		Thread attente = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true)
-					for (int i = 1 ; i <= nb ; i++)
-						requete(threads[i - 1].serveur.tryGetMessage(200), 0, i);											
-			}
-		});
+		
 		// Envoi du nombre de clients 2 ou 4
 		threads[nb - 1].client.setMessage("12 " + nbClients);
-		
+			
 		// Premier joueur
-		if (nb == 1)
+		if (nb == 1) {
+			// Avant le début de partie
+			attente = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					while (true) {
+						for (int i = 1 ; i <= nb ; i++) {
+							requete(threads[i - 1].serveur.tryGetMessage(20), 0, i);
+							System.out.println("Méchant Thread !!");
+						}
+					}
+				}
+			});
 			attente.start();
+		}			
 		
 		// Début de la partie
 		if (nb == nbClients) {
 			attente.stop();
 			this.start();
-		}			
+		}
+		
+		// Envoi de la liste des joueurs connectés ou emplacements libres
+		String buf = "10 ";
+		for (String s : clients)
+			buf += (";" + s);
+		threads[nb - 1].client.setMessage(buf);
+		
+		// Envoi du numéro dans le jeu du client
+		threads[nb - 1].client.setMessage("11 " + nb);
 	}
 	
 	// Partie
 	@Override
 	public void run() {
+		courant = 1;
 		
 		// Affichage des joueurs
 		System.out.println("Début de partie\n\tJoueurs :");
@@ -78,20 +93,27 @@ public class Partie extends Thread {
 				threads[courant - 1].client.setMessage("2");
 				
 				// Récupération de son coup
-				req = threads[courant - 1].serveur.tryGetMessage(2000);
-				bon = !requete(req, 2, courant); // Renvoit true si c'est la requete voulue
+				req = threads[courant - 1].serveur.tryGetMessage(20);
+				bon = !requete(req, 6, courant); // Renvoit true si c'est la requete voulue
 				
 				// Traiter d'autres requetes pour ne pas tout bloquer
 				for (int i = 1 ; i <= nbClients ; i++)
 					if (i != courant)
-						requete(threads[i - 1].serveur.tryGetMessage(2000), 0, i);
+						requete(threads[i - 1].serveur.tryGetMessage(20), 0, i);
 			}					
 						
 			// Changement de joueur
+			System.out.println("->Changement de joueur");
 			courant = courant % nbClients + 1;			
 		}			
 	}
-	
+	/**
+	 * Fonction qui traite les requetes
+	 * @param req
+	 * @param cmd
+	 * @param joueur
+	 * @return
+	 */
 	public boolean requete(String req, int cmd, int joueur) {
 		if (req == null)
 			return false;
@@ -112,21 +134,48 @@ public class Partie extends Thread {
 			// MURH
 			case(4):
 				System.out.println("->Le client " + clients[joueur - 1] + " veut mettre un mur horizontal en (" + Integer.parseInt(args[1]) + "," + Integer.parseInt(args[2]) + ")");
+				jeu.mur(joueur, 0, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
 				break;
 			// MURV
 			case(5):
 				System.out.println("->Le client " + clients[joueur - 1] + " veut mettre un mur vertical en (" + Integer.parseInt(args[1]) + "," + Integer.parseInt(args[2]) + ")");
+				jeu.mur(joueur, 1, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
 				break;
+				
+			//---------	
 			// DEPLACER
 			case(6):
 				System.out.println("->Le client " + clients[joueur - 1] + " veut se déplacer en (" + Integer.parseInt(args[1]) + "," + Integer.parseInt(args[2]) + ")");
-				break;
 				
-			// Quitter
+				// Si ce n'est pas son tour
+				if (courant != joueur) {
+					System.out.println("->Ce n'est pas le tour de " + clients[joueur - 1] + "!");
+					return false;
+				}
+				
+				// Cas où le coup est valide
+				if (jeu.deplacer(joueur, Integer.parseInt(args[1]), Integer.parseInt(args[2]))) {
+					System.out.println("->Le coup du joueur " + clients[joueur - 1] + " est valide");
+					// On le dit à tout le monde
+					for (Pipe t : threads)
+						if (t != null) //TODO remove lors de la production
+							t.client.setMessage("6 " + joueur + " " + args[1] + " " + args[2]);
+					// Problème de requete de jeu envoyée
+					threads[joueur - 1].client.setMessage("13");
+					return (cmd == 6);
+				}
+				// Sinon
+				System.out.println("->Le coup du joueur " + clients[joueur - 1] + " est invalide !");
+				return false;
+				
+			//--------	
+			// QUITTER
 			case(7):
 				System.out.println("->Le client " + clients[joueur - 1] + " quitte !");
 				System.exit(-1);
-			// Chat
+				
+			//-----
+			// CHAT
 			case(8):
 				if (req.length() <= 2)
 					return false;

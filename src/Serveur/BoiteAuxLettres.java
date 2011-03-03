@@ -19,7 +19,7 @@ public class BoiteAuxLettres {
 			this.message = message;
 			notifyAll();
 		}
-		System.out.println("Ajout de '" + message + "' à la boite " + num);
+		//System.out.println("Ajout de '" + message + "' à la boite " + num);
 	}
 
 	public synchronized String getMessage() {
@@ -32,7 +32,7 @@ public class BoiteAuxLettres {
 		String resultat = message;
 		message = null;
 		notifyAll();
-		System.out.println("Lecture de '" + resultat + "' dans la boite " + num);
+		//System.out.println("Lecture de '" + resultat + "' dans la boite " + num);
 		return resultat;
 	}
 }

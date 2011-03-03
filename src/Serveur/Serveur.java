@@ -1,15 +1,9 @@
 package Serveur;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PipedReader;
-import java.io.PipedWriter;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Observable;
+
 
 public class Serveur {
 
@@ -32,7 +26,7 @@ public class Serveur {
 			System.exit(-1);
 		}
 		
-		nbClients = 4;//Integer.parseInt(args[1]);
+		nbClients = Integer.parseInt(args[1]);
 		threads = new Pipe[nbClients];
 		
 		System.out.println("Serveur démarré sur le port " + args[0] + " pour " + nbClients + " clients");
@@ -62,32 +56,3 @@ class Pipe {
 		serveur = new BALTimeOut(nb);
 	}
 }
-
-	
-/*class Pipe {
-	public PrintWriter out;
-	public BufferedReader in;
-	
-	
-	 Crée un pipe "normal" dans le sens où les extrémités sont vraiment dans le même pipe
-	 
-	public Pipe() {
-		try {
-			PipedWriter tmp = new PipedWriter();
-			out = new PrintWriter(tmp);
-			in = new BufferedReader(new PipedReader(tmp));
-		} catch (IOException e) {			
-			e.printStackTrace();
-		}
-	}
-	
-	 Crée un faux pipe pour gérer un connexion bidirectionelle via 2 pipes mais seuls un des
-	 cotés de chaque pipe intéresse chaque thread 
-	 
-	public Pipe(PrintWriter out, BufferedReader in) {
-		this.out = out;
-		this.in = in;
-	}
-}*/
-
-

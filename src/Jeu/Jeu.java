@@ -27,8 +27,8 @@ public class Jeu {
 				tabCase[i][j]=new Case(i,j);
 			}
 		}
-		
-		
+
+
 
 		for(int i=0 ; i<11 ; i++)
 		{ 
@@ -40,16 +40,16 @@ public class Jeu {
 			this.listeMurs.add( new Mur(getTabCase()[0][j],getTabCase()[1][j],1));
 			this.listeMurs.add( new Mur(getTabCase()[9][j],getTabCase()[10][j],1));
 		}
-		
-		
+
+
 		for(int i=1; i<=nbJoueur;i++){
 			Joueur J = new Joueur(i,this);
 			this.listeJoueurs.add(J);
 		}
-		
+
 	}
 
-	
+
 
 
 	public boolean deplacer(int numeroJoueur, int i, int j) {
@@ -58,27 +58,69 @@ public class Jeu {
 		//Tester si caseArrivee est dans la liste des voisins de caseDepart !
 		Case caseDepart = joueurDeplace.getPosition();
 
-		if(!caseDepart.getListeVoisins().contains(caseArrivee))
-		{ System.out.println("pas voisin");
-		return false;
+		if(caseDepart.getListeVoisins().contains(caseArrivee))
+		{
+			if (caseArrivee.getJoueur()==null) {
+				joueurDeplace.setCoord( i ,j ,this);
+				return true;
+			} 
+			return false;
 		}
+
 		else
 		{
-			return  true;
+			ArrayList<Case> pionsvoisins = new ArrayList<Case>();
+			for(Case cases : caseDepart.getListeVoisins()){
+					if (cases.getJoueur()!=null){
+						pionsvoisins.add(cases);
+					}
+			}
+			int nombrepionsvoisins = pionsvoisins.size();
+			if (nombrepionsvoisins==0) return false;
+			else {
+				for(Case casevoisine : pionsvoisins) {
+					if ((casevoisine.getListeVoisins().contains(caseArrivee))&&((i==caseDepart.getI()+2)||(i==caseDepart.getI()-2)||(j==caseDepart.getJ()+2)||(j==caseDepart.getJ()-2))){
+						{joueurDeplace.setCoord( i ,j ,this); return true;}
+					}
+					else if((casevoisine.getListeVoisins().contains(caseArrivee))&&!(casevoisine.getListeVoisins().contains(tabCase[2*(casevoisine.getI())-caseDepart.getI()][2*(casevoisine.getJ())-caseDepart.getJ()]))){
+						{joueurDeplace.setCoord( i ,j ,this); return true;}
+					}
+					}
+				return false;
+				}
+
+
+			}
 		}
+
+
+
+
+	public boolean mur(int numeroJoueur, int sens, int i, int j) {
+		boolean b[] = new boolean[this.nbJoueur];
+		for (boolean booleen : b){
+			booleen=false;
+		}
+
+		this.poseMur(numeroJoueur,sens,i,j);
+		for(Joueur joueur : this.listeJoueurs){
+			marquer(joueur.getPosition());
+			for (Case casesArrivee : joueur.getListeCasesArrivee()){
+				if(casesArrivee.getMarque())
+				{
+					b[joueur.getNumeroJoueur()-1]=true;
+				}
+			}
+			this.demarquer();
+
+		}
+		if(!(b[0]&&b[1]&&b[2]&&b[3])){
+			this.retirerMur(numeroJoueur, sens, i, j);
+		}
+		return(b[0]&&b[1]&&b[2]&&b[3]);
 	}
 
-
-
-	public boolean mur(int numeroJoueur, boolean sens, int x, int y) {
-		
-		
-		
-		return true;
-	}
-
-
-	private void poseMur(int numeroJoueur, int sens, int i , int j){
+	public void poseMur(int numeroJoueur, int sens, int i , int j){
 		Case ici = this.tabCase[i][j];
 		if(sens==0){
 			this.listeMurs.add(new Mur(ici,this.getTabCase()[i-1][j], numeroJoueur));
@@ -92,8 +134,22 @@ public class Jeu {
 
 	}
 
+	private void retirerMur(int numeroJoueur, int sens, int i , int j){
+		Case ici = this.tabCase[i][j];
+		if(sens==0){
+			this.listeMurs.remove(new Mur(ici,this.getTabCase()[i-1][j], numeroJoueur));
+			this.listeMurs.remove(new Mur(this.getTabCase()[i][j+1],this.getTabCase()[i-1][j+1], numeroJoueur));
+		}
+		else
+			if (sens==1){
+				this.listeMurs.remove(new Mur(ici,this.getTabCase()[i][j-1], numeroJoueur));
+				this.listeMurs.remove(new Mur(this.getTabCase()[i+1][j],this.getTabCase()[i+1][j-1], numeroJoueur));
+			}
 
-	
+	}
+
+
+
 	public void marquer(Case c){
 		c.miseAJourVoisins(this);
 		c.setMarque(true);
@@ -115,7 +171,7 @@ public class Jeu {
 				tabCase[i][j].setMarque(false);}}
 	}
 
-	
+
 	public int victoire() {
 
 		return 0;
@@ -144,7 +200,7 @@ public class Jeu {
 	public void setListeJoueurs(ArrayList<Joueur> listeJoueurs) {
 		this.listeJoueurs = listeJoueurs;
 	}
-	
+
 
 	public static void main(String[] argv){
 		Jeu jeu = new Jeu(2);

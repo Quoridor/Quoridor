@@ -17,7 +17,8 @@ public class Reseau extends Observable{
 	private String[] joueurs;			// Liste des joueurs
 	private String nom;					// Nom du joueur
 	private Jeu jeu;					// Instance de jeu
-	private ControleurReseau controleur;// Controleur du chat	
+	private ControleurReseau controleur;// Controleur du chat
+	private	Curseur curseur;			// Curseur pour lui signaler de jouer et de rafraichir
 	
 	/**
 	 * Constructeur
@@ -77,6 +78,8 @@ public class Reseau extends Observable{
 			switch (Integer.parseInt(args[0])) {
 			// Jouer
 			case(2):
+				System.out.println("A vous de jouer !");
+				curseur.setJouer(true);
 				break;
 			
 			// Envoyer son nom
@@ -87,8 +90,12 @@ public class Reseau extends Observable{
 			// MURH
 			case(4):
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur horizontal en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
-				if (args.length == 4)
-					jeu.mur(Integer.parseInt(args[1]), false, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+				if (args.length == 4) {
+					// Ajout du mur à la représentation du client
+					jeu.poseMur(Integer.parseInt(args[1]), 0, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					// Rafraichissement de l'affichage
+					curseur.repaint();
+				}	
 				else
 					throw new Exception();
 				break;
@@ -96,15 +103,19 @@ public class Reseau extends Observable{
 			case(5):
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur vertical en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
 				if (args.length == 4)
-					jeu.mur(Integer.parseInt(args[1]), true, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					jeu.mur(Integer.parseInt(args[1]), 1, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 				else
 					throw new Exception();
 				break;
 			// DEPLACER
 			case(6):
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " se déplace en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
-				if (args.length == 4)
-					jeu.deplacer(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+				if (args.length == 4) {
+					// Déplacement du pion dans la représentation du client
+					jeu.getListeJoueurs().get(Integer.parseInt(args[1]) - 1).setCoord(Integer.parseInt(args[2]), Integer.parseInt(args[3]), jeu);
+					// Rafraichissement de l'affichage
+					curseur.repaint();
+				}
 				else
 					throw new Exception();
 				break;
@@ -117,18 +128,32 @@ public class Reseau extends Observable{
 				controleur.ecrire(req.substring(2));
 				break;
 			// Liste joueurs
-			case(10):
+			case(10):				
 				joueurs = req.substring(2).split(";");
 				break;
-			// Nombre de joueurs
+			// Numéro dans le jeu
+			case(11):
+				if (args.length == 2) {
+					joueur = Integer.parseInt(args[1]);
+					System.out.println("->Je suis le joueur N°" + joueur);
+				}
+				break;
+			// Nombre de joueurs 2 ou 4
 			case(12):
+				System.out.println("->Partie a " + Integer.parseInt(args[1]) + " joueurs");
 				this.jeu = new Jeu(Integer.parseInt(args[1]));
 				break;	
-				
+			// Fin d'etat actif
+			case(13):
+				System.out.println("->Ce n'est plus à moi de jouer  !");
+				curseur.setJouer(false);
+				break;	
+			
 			default:
 				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.err.println("->Requête invalide : " + req);
 		}
 		
@@ -222,6 +247,10 @@ public class Reseau extends Observable{
 		// Un fois le controleur mis on le signale
 		controleur.ecrire("->Connexion réussie");
 		out.println("8 Je viens de me connecter");
+	}
+	
+	public void setCurseur(Curseur curseur) {
+		this.curseur = curseur;
 	}
 	
 	public Jeu getJeu() {

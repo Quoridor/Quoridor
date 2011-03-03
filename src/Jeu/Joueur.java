@@ -6,6 +6,7 @@ public class Joueur {
 
 
 	private ArrayList<Case> listeCasesArrivee = new ArrayList<Case>(); 
+
 	private int numeroJoueur;
 	private int nombreMurs;
 	private Case position;
@@ -48,9 +49,10 @@ public class Joueur {
 		}
 
 	}
-	
-	
 
+	public ArrayList<Case> getListeCasesArrivee() {
+		return listeCasesArrivee;
+	}
 
 	public int getNumeroJoueur() {
 		return numeroJoueur;
@@ -61,12 +63,19 @@ public class Joueur {
 	public Case getPosition() {
 		return position;
 	}
-	
+
 
 	public void setPosition(Case position, Jeu jeu) {
+		if (this.position != null)
+			this.position.setJoueur(null);
 		this.position = position;
 		this.position.setJoueur(this);
 		this.position.miseAJourVoisins(jeu);
 	}
 
+	public void setCoord(int i , int j , Jeu jeu){
+		Case c = jeu.getTabCase()[i][j];
+		System.out.println("Déplacement vers " + i + " " + j + " depuis " + this.position.getI() + " " + this.position.getJ());
+		this.setPosition(c,jeu);
+	}
 }
