@@ -102,12 +102,12 @@ public class Curseur extends JPanel {
 	            		reseau.deplacer(coorX, coorY);
 	            		break;
 	            	case(2):
-	            		if (coorX >= 8)
+	            		if (coorX >= 9)
 	            			return;
 	            		reseau.mur(false, coorX, coorY);
 	            		break;
 	            	case(3):
-	            		if (coorY >= 8)
+	            		if (coorY >= 9)
 	            			return;
 	            		reseau.mur(true, coorX, coorY);
 	        			break;
@@ -211,7 +211,7 @@ public class Curseur extends JPanel {
     }
     
     /**
-     * Fonction appelée par le réseau lorsque c'est à nous de jouer
+     * Fonction appelée par le réseau lorsque c'est à nous de jouer ou pas
      */
     public void setJouer(boolean b) {
     	actif = b;

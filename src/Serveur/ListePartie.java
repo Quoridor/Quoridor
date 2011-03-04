@@ -10,12 +10,24 @@ public class ListePartie extends Thread {
 	public ListePartie() {
 	}
 	
+	/**
+	 * Ajout d'un joueur qui se connecte pour la première fois
+	 * @param client
+	 */
 	public synchronized void addJoueur(Socket client) {
 		// Création de la connexion
 		joueurs.add(new Pipe(joueurs.size()));
 	
 		// Thread par client
 		new ServeurThread(client, joueurs.get(joueurs.size() - 1)).start();		
+	}
+	
+	/**
+	 * Ajout d'un joueur qui a déjà son thread de connexion
+	 * @param joueur
+	 */
+	public synchronized void addJoueur(Pipe joueur) {
+		joueurs.add(joueur);
 	}
 	
 	// Partie
@@ -70,7 +82,7 @@ public class ListePartie extends Thread {
 			case(21):
 				System.out.println(req.substring(3).split(";")[0] + " " + req.substring(3).split(";")[1]);
 				if ((Integer.parseInt(req.substring(3).split(";")[0])==2 || Integer.parseInt(req.substring(3).split(";")[0])==4)) {
-					parties.add(new Partie(Integer.parseInt(req.substring(3).split(";")[0]), req.substring(3).split(";")[1]));
+					parties.add(new Partie(Integer.parseInt(req.substring(3).split(";")[0]), req.substring(3).split(";")[1], this));
 					// Signaler aux client qu'il y a une nouvelle partie
 					rafraichirListe();
 				}

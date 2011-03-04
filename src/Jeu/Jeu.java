@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Jeu {
 
-	private int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
+	public int nbJoueur ;/* Le nombre de joueurs initial : 2 ou 4*/
 
 
 	private Case[][] tabCase= new Case[11][11] ;
@@ -93,45 +93,53 @@ public class Jeu {
 		}
 
 	public boolean mur(int numeroJoueur, int sens, int i, int j) {
-		
+		if(this.listeJoueurs.get(numeroJoueur-1).getNombreMurs()>=1){
 		   if(sens==1){ // Horizontal
                if(this.listeMurs.contains(new Mur(this.tabCase[i][j], this.tabCase[i-1][j], numeroJoueur))||(this.listeMurs.contains(new Mur(this.tabCase[i][j+1], this.tabCase[i-1][j+1], numeroJoueur)))){
-                       return false;
+            	   System.out.println("blocage horizontal");    
+            	   return false;
                        }
                if (this.listeMurs.contains(new Mur(this.tabCase[i][j], this.tabCase[i][j+1], numeroJoueur))&&(this.listeMurs.contains(new Mur(this.tabCase[i-1][j], this.tabCase[i-1][j+1], numeroJoueur)))) {
+            	   System.out.println("blocage horizontal 2");  
             	   return false;
                }
                }
        
-       else{ // Vertical
+		   else{ // Vertical
                if(this.listeMurs.contains(new Mur(this.tabCase[i][j], this.tabCase[i][j-1], numeroJoueur))||(this.listeMurs.contains(new Mur(this.tabCase[i+1][j-1], this.tabCase[i+1][j], numeroJoueur)))){
-                       return false;
-               }
-               if (this.listeMurs.contains(new Mur(this.tabCase[i+1][j], this.tabCase[i][j], numeroJoueur))&&(this.listeMurs.contains(new Mur(this.tabCase[i+1][j-1], this.tabCase[i][j-1], numeroJoueur)))) {
+                     System.out.println("blocage vertical");
             	   return false;
                }
-       }		
+               if (this.listeMurs.contains(new Mur(this.tabCase[i+1][j], this.tabCase[i][j], numeroJoueur))&&(this.listeMurs.contains(new Mur(this.tabCase[i+1][j-1], this.tabCase[i][j-1], numeroJoueur)))) {
+            	   System.out.println("blocage vertical 2");
+            	   return false;
+               }
+		   }	
 		
 		
-		boolean b[] = new boolean[this.nbJoueur];
-		this.poseMur(numeroJoueur,sens,i,j);
-		for(Joueur joueur : this.listeJoueurs){
-			marquer(joueur.getPosition());
-			for (Case casesArrivee : joueur.getListeCasesArrivee()){
-				if(casesArrivee.getMarque())
-				{
-					b[joueur.getNumeroJoueur()-1]=true;
-				}
+		   boolean b[] = new boolean[this.nbJoueur];
+		   this.poseMur(numeroJoueur,sens,i,j);
+		   for(Joueur joueur : this.listeJoueurs){
+			   marquer(joueur.getPosition());
+			   for (Case casesArrivee : joueur.getListeCasesArrivee()){
+				   if(casesArrivee.getMarque())
+				   {
+					   b[joueur.getNumeroJoueur()-1]=true;
+				   }
+			   }
+			   this.demarquer();
 			}
-			this.demarquer();
-			
-
-		}
-		if(!(this.nbJoueur == 4 ? (b[0]&&b[1]&&b[2]&&b[3]) : b[0]&&b[1])) {
-			this.retirerMur(numeroJoueur, sens, i, j);
-			
-		}
-		return((this.nbJoueur == 4 ? (b[0]&&b[1]&&b[2]&&b[3]) : b[0]&&b[1]));
+		   	if(!(this.nbJoueur == 4 ? (b[0]&&b[1]&&b[2]&&b[3]) : b[0]&&b[1])) {
+			   this.retirerMur(numeroJoueur, sens, i, j);
+		   	}
+		   	else {
+		   		this.listeJoueurs.get(numeroJoueur-1).setnombreMurs(this.listeJoueurs.get(numeroJoueur-1).getNombreMurs() -1);
+		   		}
+		   	System.out.println("blocage marquage");  
+		   	return((this.nbJoueur == 4 ? (b[0]&&b[1]&&b[2]&&b[3]) : b[0]&&b[1]));
+		   	
+			}
+		else return false;
 	}
 	
 	public void poseMur(int numeroJoueur, int sens, int i , int j){
@@ -224,17 +232,11 @@ public class Jeu {
 
 	public static void main(String[] argv){
 		Jeu jeu = new Jeu(2);
-		System.out.println(jeu.getListeJoueurs().get(0).getPosition().getI());
-		System.out.println(jeu.getListeJoueurs().get(0).getPosition().getJ());
-		System.out.println(jeu.getListeJoueurs().get(1).getPosition().getI());
-		System.out.println(jeu.getListeJoueurs().get(1).getPosition().getJ());
-		if (jeu.deplacer(1,8,5)) {
-			System.out.println("coucou");
+		System.out.println(jeu.getListeJoueurs().get(0).getNombreMurs());
+		
+		System.out.println(jeu.mur(1,1,4,8));
+		System.out.println(jeu.getListeJoueurs().get(0).getNombreMurs());
+		jeu.mur(1,0,8,2);
+		System.out.println(jeu.getListeJoueurs().get(0).getNombreMurs());
 		}
-		jeu.getListeJoueurs().get(0).setPosition(jeu.getTabCase()[8][5], jeu);
-		if (jeu.deplacer(1,4,2)){
-			System.out.println("sjklfjskl");
-		}
-	}
-
 }

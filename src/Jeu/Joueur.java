@@ -14,6 +14,7 @@ public class Joueur {
 
 	public Joueur(int numeroJoueur, Jeu jeu){
 		this.numeroJoueur=numeroJoueur;
+		this.nombreMurs =20/(jeu.nbJoueur);
 		switch(numeroJoueur){
 		case 1 :
 			for(int j=1;j<10;j++){
@@ -64,6 +65,9 @@ public class Joueur {
 		return position;
 	}
 
+	public void setnombreMurs ( int n){
+		this.nombreMurs=n;
+	}
 
 	public void setPosition(Case position, Jeu jeu) {
 		if (this.position != null)

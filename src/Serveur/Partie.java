@@ -14,10 +14,12 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 	private Jeu jeu;
 	private Thread attente;
 	public String nom;
+	private ListePartie listePartie;
 	
-	public Partie(int nbclients, String nom) {
+	public Partie(int nbclients, String nom, ListePartie listePartie) {
 		this.nom = nom;
 		this.nbClients = nbclients;
+		this.listePartie = listePartie;
 		clients = new String[nbClients];
 				
 		// Noms par défaut
@@ -221,12 +223,30 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 			// QUITTER
 			case(7):
 				System.out.println("->Le client " + clients[joueur - 1] + " quitte !");
-				// On signale la victoire aux joueurs
-				for (int i = 1 ; i <= nbClients ; i++)
-					if (i != joueur)
-						threads.get(i - 1).client.setMessage("7");
-				this.stop();
 				
+				// Si la partie n'est pas encore commencée
+				if (threads.size() < nbClients) {
+					// On place le joueur dans la salle d'attente
+					listePartie.addJoueur(threads.get(joueur - 1));
+					
+					// On le dit au client
+					threads.get(joueur - 1).client.setMessage("23");
+					
+					// On le dit aux autres
+					for (int i = 1 ; i <= threads.size() ; i++)
+						if (i != joueur)
+							threads.get(i - 1).client.setMessage("23");
+					
+					// On enlève le joueur de la liste
+					threads.remove(joueur - 1);
+				}					
+				else {
+					// On signale la fin aux joueurs
+					for (int i = 1 ; i <= nbClients ; i++)
+						if (i != joueur)
+							threads.get(i - 1).client.setMessage("23");
+					this.stop();
+				}
 			//-----
 			// CHAT
 			case(8):

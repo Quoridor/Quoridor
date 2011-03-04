@@ -22,6 +22,7 @@ public class Reseau extends Observable{
 	private	Curseur curseur;			// Curseur pour lui signaler de jouer et de rafraichir
 	private SelectionPartie selectionPartie;
 	private	ArrayList<Partie> parties;	// Liste des parties
+	private FenetreJeu fenetreJeu;
 	
 	/**
 	 * Constructeur
@@ -92,7 +93,7 @@ public class Reseau extends Observable{
 			switch (Integer.parseInt(args[0])) {
 			// Jouer
 			case(2):
-				System.out.println("A vous de jouer !");
+				//System.out.println("A vous de jouer !");
 				curseur.setJouer(true);
 				break;
 			
@@ -186,6 +187,10 @@ public class Reseau extends Observable{
 				// Updater l'affichage
 				selectionPartie.rafraichir();
 				break;
+			// Retourner à la liste de sélection de partie
+			case(23):
+				fenetreJeu.retourListe();
+				break;
 			default:
 				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));
 			}
@@ -227,8 +232,8 @@ public class Reseau extends Observable{
 	 * Fonction qui dit au serveur que l'on se déconnecte
 	 * @return		Retourne false si il y a une erreur
 	 */
-	public boolean quitter() {
-		return true;
+	public void quitter() {
+		out.println("7");
 	}
 	
 	/**
@@ -328,6 +333,12 @@ public class Reseau extends Observable{
 	public Jeu getJeu() {
 		return this.jeu;
 	}
+	
+	public void setFenetreJeu(FenetreJeu fenetreJeu) {
+		this.fenetreJeu = fenetreJeu;
+	}
+	
+	
 }
 
 class Partie {

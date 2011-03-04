@@ -1,9 +1,11 @@
 package GUI;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,16 +24,20 @@ public class FenetreConnexion extends JFrame implements ActionListener{
 	public FenetreConnexion() {
 		super("Connexion");
 		
+		setPreferredSize(new Dimension(300, 150));
+		setLocationRelativeTo(null);
+		
+		
 		Box hbox1 = Box.createHorizontalBox();
-		hbox1.add(new JLabel("Utilisateur"));
+		hbox1.add(new JLabel("Utilisateur : ",new ImageIcon("images/utilisateur.png"), JLabel.LEFT));
 		hbox1.add(nom);
 		
 		Box hbox2 = Box.createHorizontalBox();
-		hbox2.add(new JLabel("Serveur"));
+		hbox2.add(new JLabel("Serveur : ", new ImageIcon("images/serveur.png"), JLabel.LEFT));
 		hbox2.add(serveur);
 		
 		Box hbox3 = Box.createHorizontalBox();
-		hbox3.add(new JLabel("Port"));
+		hbox3.add(new JLabel("Port : ", new ImageIcon("images/port.png"), JLabel.LEFT));
 		hbox3.add(port);
 		
 		Box vbox = Box.createVerticalBox();
@@ -59,8 +65,8 @@ public class FenetreConnexion extends JFrame implements ActionListener{
 			// Lancement du jeu
 			new SelectionPartie(reseau);		
 			
-			// Cacher la fenetre de connexion
-			this.setVisible(false);				
+			// Fermer la fenetre de connexion
+			this.dispose();				
 		}
 		catch (Exception e) {			
 			JOptionPane.showMessageDialog(null, "Impossible de joindre le serveur", "Erreur de connexion", JOptionPane.ERROR_MESSAGE);

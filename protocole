@@ -1,0 +1,23 @@
+--Client
+2 // Signifie au client que c'est à lui de joueur
+3 // Le serveur veut le nom du client
+4 joueur X Y // Le joueur numéro 'joueur' ajoute un mur horizontal en (X, Y)
+5 joueur X Y // Le joueur numéro 'joueur' ajoute un mur vertical en (X, Y)
+6 joueur X Y // Le joueur numéro 'joueur' se déplace en (X, Y)
+7 // La partie se termine anormalement
+8 message // Envoie 'message' à tous les utilisateurs
+10 ;joueur1;...;joueurn // Liste des joueurs sur la partie
+11 numéro // Numéro du joueur dans la partie
+12 nombre // La partie à 'nombre' joueurs
+13 // Ce n'est plus à moi de joueur
+14 numéro // Le joueur numéro 'numéro' gagne
+20 ;partie2;partie24 // Liste des parties
+
+--Serveur 
+7 // Le joueur quitte la partie
+
+--Liste partie
+7 // Le joueur quitte le serveur
+20 // Le joueur veut la liste des parties
+21 nb;nom // Le joueur crée une partie de 'nb' joueurs avec le nom 'nom'
+22 nom // Le joueur veut rejoindre la partie 'nom'
