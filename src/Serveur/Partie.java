@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import Jeu.Jeu;
 
 public class Partie extends Thread {
-	private Pipe[] threads;
+private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 	public int nbClients;
 	private String[] clients;
-	public int nb = 0;
-	private int courant = 0;//TODO A changer à 0 lors de la mise en production
+	private int courant = 0;
 	private Jeu jeu;
 	private Thread attente;
 	public String nom;
@@ -20,8 +19,7 @@ public class Partie extends Thread {
 		this.nom = nom;
 		this.nbClients = nbclients;
 		clients = new String[nbClients];
-		threads = new Pipe[nbclients];
-		
+				
 		// Noms par défaut
 		for (int i = 0 ; i < nbClients ; i++)
 			clients[i] = "Emplacement libre " + (i+1);
@@ -31,22 +29,20 @@ public class Partie extends Thread {
 	
 	public void addClient(Pipe pipe) {
 		// Création des connexions
-		threads[nb] = pipe;
+		threads.add(pipe);
 	
-		nb++;		
-		
 		// Envoi du nombre de clients 2 ou 4
-		threads[nb - 1].client.setMessage("12 " + nbClients);
+		threads.get(threads.size() - 1).client.setMessage("12 " + nbClients);
 			
 		// Premier joueur
-		if (nb == 1) {
+		if (threads.size() == 1) {
 			// Avant le début de partie
 			attente = new Thread(new Runnable() {
 				@Override
 				public void run() {
 					while (true) {
-						for (int i = 1 ; i <= nb ; i++) {
-							requete(threads[i - 1].serveur.tryGetMessage(20), 0, i);
+						for (int i = 1 ; i <= threads.size() ; i++) {
+							requete(threads.get(i - 1).serveur.tryGetMessage(20), 0, i);
 						}
 					}
 				}
@@ -58,18 +54,18 @@ public class Partie extends Thread {
 		String buf = "10 ";
 		for (String s : clients)
 			buf += (";" + s);
-		threads[nb - 1].client.setMessage(buf);
+		threads.get(threads.size() - 1).client.setMessage(buf);
 		
 		// Envoi du numéro dans le jeu du client
-		threads[nb - 1].client.setMessage("11 " + nb);
+		threads.get(threads.size() - 1).client.setMessage("11 " + threads.size());
 		
 		// Envoi du message de connexion aux autres joueurs
-		for (int i = 1 ; i <= nb ; i++)
-			if (i != nb - 1) // Sauf à lui-même
-				threads[i - 1].client.setMessage("8 " + clients[i - 1] + " vient de se connecter");
+		for (int i = 1 ; i <= threads.size() ; i++)
+			if (i != threads.size() - 1) // Sauf à lui-même
+				threads.get(i - 1).client.setMessage("8 " + clients[i - 1] + " vient de se connecter");
 		
 		// Début de la partie
-		if (nb == nbClients) {
+		if (threads.size() == nbClients) {
 			attente.stop();
 			this.start();
 		}
@@ -93,16 +89,16 @@ public class Partie extends Thread {
 			// Boucle tant que l'on a pas une action du joueur courant
 			while (bon) {
 				// Demande au joueur courant de jouer
-				threads[courant - 1].client.setMessage("2");
+				threads.get(courant - 1).client.setMessage("2");
 				
 				// Récupération de son coup
-				req = threads[courant - 1].serveur.tryGetMessage(20);
+				req = threads.get(courant - 1).serveur.tryGetMessage(20);
 				bon = !requete(req, 6, courant); // Renvoit true si c'est la requete voulue
 				
 				// Traiter d'autres requetes pour ne pas tout bloquer
 				for (int i = 1 ; i <= nbClients ; i++)
 					if (i != courant)
-						requete(threads[i - 1].serveur.tryGetMessage(20), 0, i);
+						requete(threads.get(i - 1).serveur.tryGetMessage(20), 0, i);
 			}					
 			
 			// On regarde si la partie est finie
@@ -111,7 +107,7 @@ public class Partie extends Thread {
 				// On signale la victoire aux joueurs
 				for (int i = 1 ; i <= nbClients ; i++)
 					if (i != courant)
-						threads[i - 1].client.setMessage("14 " + courant);
+						threads.get(i - 1).client.setMessage("14 " + courant);
 				//TODO Gestion des scores
 				this.stop();
 			}
@@ -162,7 +158,7 @@ public class Partie extends Thread {
 						if (t != null) //TODO remove lors de la production
 							t.client.setMessage("4 " + joueur + " " + args[1] + " " + args[2]);
 					// On dit au client que ce n'est plus son tour
-					threads[joueur - 1].client.setMessage("13");
+					threads.get(joueur - 1).client.setMessage("13");
 					return true;
 				}
 				// Sinon
@@ -188,7 +184,7 @@ public class Partie extends Thread {
 						if (t != null) //TODO remove lors de la production
 							t.client.setMessage("5 " + joueur + " " + args[1] + " " + args[2]);
 					// On dit au client que ce n'est plus son tour
-					threads[joueur - 1].client.setMessage("13");
+					threads.get(joueur - 1).client.setMessage("13");
 					return true;
 				}
 				// Sinon
@@ -214,7 +210,7 @@ public class Partie extends Thread {
 						if (t != null) //TODO remove lors de la production
 							t.client.setMessage("6 " + joueur + " " + args[1] + " " + args[2]);
 					// Problème de requete de jeu envoyée
-					threads[joueur - 1].client.setMessage("13");
+					threads.get(joueur - 1).client.setMessage("13");
 					return true;
 				}
 				// Sinon
@@ -228,7 +224,7 @@ public class Partie extends Thread {
 				// On signale la victoire aux joueurs
 				for (int i = 1 ; i <= nbClients ; i++)
 					if (i != joueur)
-					threads[i - 1].client.setMessage("7");
+						threads.get(i - 1).client.setMessage("7");
 				this.stop();
 				
 			//-----
@@ -237,22 +233,22 @@ public class Partie extends Thread {
 				if (req.length() <= 2)
 					return false;
 				System.out.println("->Le client " + clients[joueur - 1] + " écrit : " + req.substring(2));
-				for (int i = 0 ; i < nb ; i++)
-					threads[i].client.setMessage("8 " + clients[joueur - 1] + " : " + req.substring(2));
+				for (Pipe p : threads)
+					p.client.setMessage("8 " + clients[joueur - 1] + " : " + req.substring(2));
 				break;
 			// Echo
 			case(9):
 				if (args.length > 1)
-					threads[joueur - 1].client.setMessage(req.substring(2));
+					threads.get(joueur - 1).client.setMessage(req.substring(2));
 				else
-					threads[joueur - 1].client.setMessage("Echo");
+					threads.get(joueur - 1).client.setMessage("Echo");
 				break;
 			// Liste joueurs
 			case(10):
 				String buf = "10 ";
 				for (String s : clients)
 					buf += (";" + s);
-				threads[joueur - 1].client.setMessage(buf);
+				threads.get(joueur - 1).client.setMessage(buf);
 			// Passer son tour
 			case(15):
 				// Si c'est le joueur courant
@@ -269,7 +265,7 @@ public class Partie extends Thread {
 		return false;
 	}
 
-	public int getNbClients() {		
-		return this.nbClients;
+	public int getConnectes() {		
+		return this.threads.size();
 	}
 }
