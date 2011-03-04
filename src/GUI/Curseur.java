@@ -13,6 +13,8 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import Jeu.*;
 
@@ -29,9 +31,11 @@ public class Curseur extends JPanel {
     //	2 : mur horizontal
     //	3 : mur vertical
     private int fonction=1;
+    private Cursor curseurVide;
            
     // Etat
     private boolean actif = false;
+    private boolean afficherCurseur;
     
     // Reseau
     private Reseau reseau;
@@ -43,11 +47,23 @@ public class Curseur extends JPanel {
     	// Reseau->Curseur
     	this.reseau.setCurseur(this);
     	
-        setPreferredSize(new Dimension(400,400));
+    	// Envoi du nom
+    	this.reseau.envoyerNom();
+    	
+    	// Récupération des noms
+    	this.reseau.recupererJoueurs();
+    	
+    	Image img = Toolkit.getDefaultToolkit().createImage("");
+    	curseurVide= Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(0,0), "position");
+    	 	
+        setPreferredSize(new Dimension(9*tailleCase, 9*tailleCase));
+        this.setMinimumSize(new Dimension(9*tailleCase, 9*tailleCase));
+        this.setMaximumSize(new Dimension(9*tailleCase, 9*tailleCase));
         
         // Gestion du curseur
         addMouseMotionListener(
         new MouseMotionAdapter() {
+        	@Override
             public void mouseMoved (MouseEvent clic) {
             	if ((clic.getX() > (fonction==3 ? tailleCase : 0)) &&
                     	(clic.getX() < (fonction==2 ? 8 : 9)*tailleCase) &&
@@ -58,6 +74,8 @@ public class Curseur extends JPanel {
                 	repaint();
                 }
             }
+
+            
         });
    
         // Gestion du coup à jouer via le clic
@@ -72,9 +90,8 @@ public class Curseur extends JPanel {
 	            	actif) {
 	            	
 	            	//Effacement du curseur
-	            	//Image img = Toolkit.getDefaultToolkit().createImage("");
-	            	//Cursor curseurvide= Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(0,0), "position");
-	            	//setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+	            	
+	            	
 	            	
 	                int coorX = clic.getX()/tailleCase+1;
 	                int coorY = clic.getY()/tailleCase+1;
@@ -85,9 +102,13 @@ public class Curseur extends JPanel {
 	            		reseau.deplacer(coorX, coorY);
 	            		break;
 	            	case(2):
+	            		if (coorX >= 8)
+	            			return;
 	            		reseau.mur(false, coorX, coorY);
 	            		break;
 	            	case(3):
+	            		if (coorY >= 8)
+	            			return;
 	            		reseau.mur(true, coorX, coorY);
 	        			break;
 	            	}
@@ -100,7 +121,16 @@ public class Curseur extends JPanel {
 	
 	            }                
 	        }
-	        
+            @Override
+            public void mouseExited (MouseEvent clic) {
+            	afficherCurseur = false;
+            	repaint();
+            }
+            @Override
+            public void mouseEntered (MouseEvent clic) {
+            	afficherCurseur = true;
+            	setCursor(curseurVide);
+            }
 	    });
     }
     
@@ -126,33 +156,33 @@ public class Curseur extends JPanel {
         // Pions
         for(Joueur J : reseau.getJeu().getListeJoueurs()) {
         	couleur(g, J.getNumeroJoueur());
-        	g.fillOval((J.getPosition().getI() - 1)*tailleCase, (J.getPosition().getJ() - 1)*tailleCase, tailleCase, tailleCase);
+        	g.fillOval((J.getPosition().getI() - 1)*tailleCase+3, (J.getPosition().getJ() - 1)*tailleCase+3, tailleCase-6, tailleCase-6);
         }
         // Murs
         for(Mur M : reseau.getJeu().getListeMurs()) {
         	// Si c'est les murs de base
-        	//if (M.getNumeroJoueur() != 0) {
+        	if (M.getNumeroJoueur() != 0) {
 	        	couleur(g, M.getNumeroJoueur());
 	        	if(M.getSens() == 0)
 	        		// Horizontal
-	        		g.fillRect((M.getI()-1)*tailleCase, (M.getJ()-1)*tailleCase-5, tailleCase, 11);
+	        		g.fillRect((M.getI()-1)*tailleCase, (M.getJ()-1)*tailleCase-5, tailleCase, 7);
 	        	else
-	        		g.fillRect((M.getI()-1)*tailleCase-5,(M.getJ()-1)*tailleCase, 11, tailleCase);
-	        //}          
+	        		g.fillRect((M.getI()-1)*tailleCase-5,(M.getJ()-1)*tailleCase, 7, tailleCase);
+	        }          
         }
         
         // Curseur si etat actif
-        if (actif) {
+        if (actif && afficherCurseur) {
         	couleur(g, reseau.getJoueur());
             switch(fonction) {
                 case 1:
-                	g.fillOval((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase,tailleCase,tailleCase);
+                	g.fillOval((abscisse/tailleCase)*tailleCase+3,(ordonnee/tailleCase)*tailleCase+3,tailleCase-6,tailleCase-6);
                 	break;
                 case 2:
-                	g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-5,80,11);
+                	g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-5,80,7);
                 	break;
                 case 3:
-                	g.fillRect((abscisse/tailleCase)*tailleCase-5,(ordonnee/tailleCase)*tailleCase,11,80);
+                	g.fillRect((abscisse/tailleCase)*tailleCase-5,(ordonnee/tailleCase)*tailleCase,7,80);
                 	break;
             }
         }
@@ -186,4 +216,12 @@ public class Curseur extends JPanel {
     public void setJouer(boolean b) {
     	actif = b;
     }
+    
+    /**
+     * Fonction appelée par le réseau lorsque la partie se termine de manière anormale
+     */
+    public void finBrutale() {
+		JOptionPane.showMessageDialog(null, "La partie vient de se terminer brutalement, soit un joueur a quitté soit il y a une erreur", "Fin de partie anormale", JOptionPane.ERROR_MESSAGE);
+    }
+    
 }

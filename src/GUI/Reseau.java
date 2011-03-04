@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Observable;
 
 import Jeu.Jeu;
@@ -19,6 +20,8 @@ public class Reseau extends Observable{
 	private Jeu jeu;					// Instance de jeu
 	private ControleurReseau controleur;// Controleur du chat
 	private	Curseur curseur;			// Curseur pour lui signaler de jouer et de rafraichir
+	private SelectionPartie selectionPartie;
+	private	ArrayList<Partie> parties;	// Liste des parties
 	
 	/**
 	 * Constructeur
@@ -28,6 +31,7 @@ public class Reseau extends Observable{
 	 */
 	public Reseau(String host, int port, String nom) throws Exception {
 		this.nom = nom;
+		this.parties = new ArrayList<Partie>();
 		Socket connexion = null;
 		try {
 			connexion = new Socket(host, port);
@@ -61,8 +65,18 @@ public class Reseau extends Observable{
 		});	
 		lecture.start();
 		
+		// Envoyer son nom
 		this.envoyerNom(nom);
+		
+		// Récupérer la liste des parties
+		this.recupererParties();
 	}
+	
+	public void recupererParties() {
+		// TODO Changer de place
+		out.println("20");		
+	}
+	
 	/**
 	 * Fonction qui gère les informations reçues du serveur
 	 * @param req Requete reçue
@@ -121,15 +135,15 @@ public class Reseau extends Observable{
 				break;
 			// Quitter
 			case(7):
-				System.out.println("->Le serveur quitte !");
-				System.exit(-1);
+				System.out.println("->La partie se termine de manière impromptue !");
+				curseur.finBrutale();
 			// Chat
 			case(8):
 				controleur.ecrire(req.substring(2));
 				break;
 			// Liste joueurs
 			case(10):				
-				joueurs = req.substring(2).split(";");
+				joueurs = req.substring(2).split(";");//TODO vérifier le parsage avec le premier ;
 				break;
 			// Numéro dans le jeu
 			case(11):
@@ -147,8 +161,31 @@ public class Reseau extends Observable{
 			case(13):
 				System.out.println("->Ce n'est plus à moi de jouer  !");
 				curseur.setJouer(false);
-				break;	
-			
+				break;
+			// Victoire
+			case(14):
+				if (args.length < 2)
+					return;
+				if (joueur == Integer.parseInt(args[1]))
+					System.out.println("->Victoire");
+				else
+					System.out.println("->Défaite, le joueur " + joueurs[Integer.parseInt(args[1])] + " gagne...");
+				break;
+			// Récupérer la liste des parties
+			case(20):
+				parties.clear();
+				// Si il n'y en a pas
+				if (args.length == 1)
+					return;
+				else {
+					for (String s : req.substring(4).split(";"))
+						//System.out.println(args[1] + " : " + s);
+						parties.add(new Partie(s.substring(0, s.length() - 2), Integer.parseInt(s.substring(s.length()-2, s.length()-1)), Integer.parseInt(s.substring(s.length()-1))));
+				}
+				System.out.println("->Rafraichissement de la liste des parties");
+				// Updater l'affichage
+				selectionPartie.rafraichir();
+				break;
 			default:
 				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));
 			}
@@ -165,6 +202,10 @@ public class Reseau extends Observable{
 	 * @return		Retourne false si il y a une erreur
 	 */
 	public void envoyerNom(String nom) {
+		out.println("3 " + nom);
+	}
+	
+	public void envoyerNom() {
 		out.println("3 " + nom);
 	}
 	
@@ -210,6 +251,10 @@ public class Reseau extends Observable{
 		out.println((sens ? "5" : "4") + " " + x + " " + y);
 	}
 	
+	public ArrayList<Partie> getParties() {
+		return parties;
+	}
+	
 	/** Renvoit le numéro du joueur
 	 * @return		 Numéro du joueur
 	 */
@@ -231,6 +276,14 @@ public class Reseau extends Observable{
 	}
 	
 	/**
+	 * Demande de création de partie
+	 */
+	public void creerPartie(String nom, int joueurs) {
+		if (nom != null)
+			out.println("21 " + joueurs + ";" + nom);
+	}
+	
+	/**
 	 * Signale au serveur que l'on quitte
 	 */
 	public void signalerFin() {
@@ -241,19 +294,50 @@ public class Reseau extends Observable{
 		out.println("8 " + texte);
 	}
 	
+	/**
+	 * Fonction pour rejoindre la partie
+	 */
+	public void rejoindre(String nom) {
+		out.println("22 " + nom);
+		//TODO connexion avec la fenetre avec la liste des joueurs pour savoir si on est réellement connecté
+	}
+	
+	/**
+	 * Fonction permettant de passer son tour
+	 */
+	public void passerTour() {
+		out.println("15");
+		curseur.setJouer(false);
+	}
+	
 	public void setControleur(ControleurReseau controleur) {
 		this.controleur = controleur;
 		
 		// Un fois le controleur mis on le signale
 		controleur.ecrire("->Connexion réussie");
-		out.println("8 Je viens de me connecter");
 	}
 	
 	public void setCurseur(Curseur curseur) {
 		this.curseur = curseur;
 	}
 	
+	public void setPartie(SelectionPartie partie) {
+		this.selectionPartie = partie;
+	}
+	
 	public Jeu getJeu() {
 		return this.jeu;
+	}
+}
+
+class Partie {
+	public String nom;
+	public int nbJoueurs;
+	public int nbConnectes;
+	
+	public Partie(String nom, int nbJoueurs, int nbConnectes) {
+		this.nom = nom;
+		this.nbJoueurs = nbJoueurs;
+		this.nbConnectes = nbConnectes;
 	}
 }

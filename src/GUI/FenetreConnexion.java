@@ -57,7 +57,7 @@ public class FenetreConnexion extends JFrame implements ActionListener{
 			Reseau reseau = new Reseau(serveur.getText(), (Integer) port.getValue(), nom.getText());
 			
 			// Lancement du jeu
-			new FenetreJeu(reseau);		
+			new SelectionPartie(reseau);		
 			
 			// Cacher la fenetre de connexion
 			this.setVisible(false);				

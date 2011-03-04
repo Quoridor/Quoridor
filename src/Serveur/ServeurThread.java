@@ -24,7 +24,7 @@ public class ServeurThread extends Thread {
 
 	@Override
 	public void run() {		
-		
+		System.out.println("Try");
 		// Thread de lecture
 		Thread lecture = new Thread(new Runnable() {
 			@Override

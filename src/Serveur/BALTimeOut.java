@@ -6,6 +6,10 @@ public class BALTimeOut extends BoiteAuxLettres {
 	public BALTimeOut(int num) {
 		super(num);
 	}
+	
+	public BALTimeOut() {
+		super();
+	}
 
 	public synchronized boolean trySetMessage(String message, long timeout) {
 		if (message != null) {

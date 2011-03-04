@@ -40,13 +40,6 @@ public class Jeu {
 			this.listeMurs.add( new Mur(getTabCase()[9][j],getTabCase()[10][j], 0));
 		}
 
-		this.listeMurs.add( new Mur(getTabCase()[9][4],getTabCase()[9][5], 3));
-		this.listeMurs.add( new Mur(getTabCase()[2][5],getTabCase()[2][6], 3));
-		poseMur(1, 1, 2, 5);
-		poseMur(1, 0, 2, 5);
-		
-		for (Mur m : listeMurs)
-			System.out.println(m.getI() + "," + m.getJ() + " " +  m.getSens());
 
 		for(int i=1; i<=nbJoueur;i++){
 			Joueur J = new Joueur(i,this);
@@ -100,11 +93,27 @@ public class Jeu {
 		}
 
 	public boolean mur(int numeroJoueur, int sens, int i, int j) {
+		
+		   if(sens==1){ // Horizontal
+               if(this.listeMurs.contains(new Mur(this.tabCase[i][j], this.tabCase[i-1][j], numeroJoueur))||(this.listeMurs.contains(new Mur(this.tabCase[i][j+1], this.tabCase[i-1][j+1], numeroJoueur)))){
+                       return false;
+                       }
+               if (this.listeMurs.contains(new Mur(this.tabCase[i][j], this.tabCase[i][j+1], numeroJoueur))&&(this.listeMurs.contains(new Mur(this.tabCase[i-1][j], this.tabCase[i-1][j+1], numeroJoueur)))) {
+            	   return false;
+               }
+               }
+       
+       else{ // Vertical
+               if(this.listeMurs.contains(new Mur(this.tabCase[i][j], this.tabCase[i][j-1], numeroJoueur))||(this.listeMurs.contains(new Mur(this.tabCase[i+1][j-1], this.tabCase[i+1][j], numeroJoueur)))){
+                       return false;
+               }
+               if (this.listeMurs.contains(new Mur(this.tabCase[i+1][j], this.tabCase[i][j], numeroJoueur))&&(this.listeMurs.contains(new Mur(this.tabCase[i+1][j-1], this.tabCase[i][j-1], numeroJoueur)))) {
+            	   return false;
+               }
+       }		
+		
+		
 		boolean b[] = new boolean[this.nbJoueur];
-		for (boolean booleen : b){
-			booleen=false;
-		}
-
 		this.poseMur(numeroJoueur,sens,i,j);
 		for(Joueur joueur : this.listeJoueurs){
 			marquer(joueur.getPosition());
@@ -115,10 +124,12 @@ public class Jeu {
 				}
 			}
 			this.demarquer();
+			
 
 		}
 		if(!(this.nbJoueur == 4 ? (b[0]&&b[1]&&b[2]&&b[3]) : b[0]&&b[1])) {
 			this.retirerMur(numeroJoueur, sens, i, j);
+			
 		}
 		return((this.nbJoueur == 4 ? (b[0]&&b[1]&&b[2]&&b[3]) : b[0]&&b[1]));
 	}
@@ -141,16 +152,18 @@ public class Jeu {
 
 	private void retirerMur(int numeroJoueur, int sens, int i , int j){
 		Case ici = this.tabCase[i][j];
-		if(sens==0){
+		if(sens==1){
 			this.listeMurs.remove(new Mur(ici,this.getTabCase()[i-1][j], numeroJoueur));
 			this.listeMurs.remove(new Mur(this.getTabCase()[i][j+1],this.getTabCase()[i-1][j+1], numeroJoueur));
 		}
 		else
-			if (sens==1){
+			{
 				this.listeMurs.remove(new Mur(ici,this.getTabCase()[i][j-1], numeroJoueur));
 				this.listeMurs.remove(new Mur(this.getTabCase()[i+1][j],this.getTabCase()[i+1][j-1], numeroJoueur));
 			}
-
+		for(Joueur player : this.getListeJoueurs())
+			player.getPosition().miseAJourVoisins(this);
+			
 	}
 
 

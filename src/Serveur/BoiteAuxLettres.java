@@ -8,6 +8,9 @@ public class BoiteAuxLettres {
 		this.num = num;
 	}
 
+	public BoiteAuxLettres() {
+	}
+	
 	public synchronized void setMessage(String message) {
 		if (message != null) {
 			while (this.message != null) {

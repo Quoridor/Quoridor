@@ -6,16 +6,17 @@ import javax.swing.*;
 //import java.awt.*;
 
 public class Boutons extends JToolBar {
+	static final long serialVersionUID = 1;
 	
 	public Boutons(ControleurBoutons  controleur) {
 		super("Barre d'Outils", JToolBar.HORIZONTAL);
 		//Liste des boutons et à modifier
-		JButton deplacement = new JButton(new ImageIcon("test.jpg")),
-    	murH = new JButton(new ImageIcon("test.jpg")),
-    	murV = new JButton(new ImageIcon("test.jpg")),
+		JButton deplacement = new JButton(new ImageIcon("images/deplacer.png")),
+    	murH = new JButton(new ImageIcon("images/murH.png")),
+    	murV = new JButton(new ImageIcon("images/murV.png")),
     	
-    	//retourMenu = new JButton(new ImageIcon("test.jpg")),
-		Regle = new JButton(new ImageIcon("test.jpg"));
+    	//retourMenu = new JButton(new ImageIcon("images/retourMenu.png")),
+		Regle = new JButton(new ImageIcon("images/RegleDuJeu.png"));
     
 		deplacement.setText("Déplacement");
 		murH.setText("Mur Horizontal");
