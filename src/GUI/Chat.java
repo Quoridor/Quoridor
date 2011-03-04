@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import sun.awt.resources.awt;
 
@@ -32,6 +34,15 @@ public class Chat extends JPanel {
 		this.setPreferredSize(new Dimension(400, 500));
 		discussion.setPreferredSize(new Dimension(350, 400));
 		discussion.setEditable(false);
+		phrase.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent event) {
+				System.out.println("Touche pressée : " + event.getKeyCode() + " " + KeyEvent.VK_ENTER);
+				if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+					controleur.envoyer();
+				}
+			}
+		});
 		vbox.add(discussion);
 		vbox.add(hbox);
 		
@@ -59,7 +70,5 @@ public class Chat extends JPanel {
 	
 	public ControleurReseau getControleur() {
 		return this.controleur;
-	}
-	
-	
+	}	
 }

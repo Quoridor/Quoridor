@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.Component;
+import Jeu.Joueur;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -56,9 +57,9 @@ public class Curseur extends JPanel {
     	Image img = Toolkit.getDefaultToolkit().createImage("");
     	curseurVide= Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(0,0), "position");
     	 	
-        setPreferredSize(new Dimension(9*tailleCase, 9*tailleCase));
-        this.setMinimumSize(new Dimension(9*tailleCase, 9*tailleCase));
-        this.setMaximumSize(new Dimension(9*tailleCase, 9*tailleCase));
+        setPreferredSize(new Dimension(9*tailleCase, 9*tailleCase+1));
+        this.setMinimumSize(new Dimension(9*tailleCase, 9*tailleCase+1));
+        this.setMaximumSize(new Dimension(9*tailleCase, 9*tailleCase+1));
         
         // Gestion du curseur
         addMouseMotionListener(
@@ -142,9 +143,21 @@ public class Curseur extends JPanel {
         super.paintComponent(g);
         
         // Damier
-        g.setColor(Color.RED);
+        g.setColor(Color.WHITE);
         g.fillRect(0,0,9*tailleCase,9*tailleCase);
         
+        // Murs extérieurs
+        couleur(g, 1);
+        g.fillRect(0, 0, 3, 9*tailleCase);
+        couleur(g, 2);
+        g.fillRect(9*tailleCase-3, 0, 3, 9*tailleCase);
+        if (reseau.getJeu().getListeJoueurs().size() == 4) {
+        	couleur(g, 4);
+        	g.fillRect(0, 0, 9*tailleCase, 3);
+        	couleur(g, 3);
+        	g.fillRect(0, 9*tailleCase-3, 9*tailleCase, 3);
+        }
+
         // Grille
         g.setColor(Color.BLACK);
         for (int i=0; i < 10; i++) {

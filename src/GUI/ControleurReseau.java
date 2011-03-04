@@ -15,6 +15,10 @@ public class ControleurReseau implements ActionListener {
 	// Envoi du message
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		envoyer();
+	}
+	
+	public void envoyer() {
 		this.reseau.chat(this.chat.getTexte());
 		this.chat.cleanPrompt();
 	}

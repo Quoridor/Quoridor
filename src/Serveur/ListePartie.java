@@ -27,6 +27,7 @@ public class ListePartie extends Thread {
 	 * @param joueur
 	 */
 	public synchronized void addJoueur(Pipe joueur) {
+		System.out.println("->Retour d'un joueur sur la liste");
 		joueurs.add(joueur);
 	}
 	
@@ -38,7 +39,9 @@ public class ListePartie extends Thread {
 		while (true) {
 			// Traiter les requetes
 			for (int i = 0 ; i < joueurs.size() ; i++) {
-				requete(joueurs.get(i).serveur.tryGetMessage(20), i);				
+				try {
+					requete(joueurs.get(i).serveur.tryGetMessage(20), i);
+				} catch (Exception e) {}
 			}
 		}			
 	}
@@ -93,10 +96,9 @@ public class ListePartie extends Thread {
 			// Rejoindre une partie
 			case(22):
 				if (args.length < 2)
-					throw new Exception();
-				//TODO Vérification vérifier si la partie existe et gérer lorsque la partie est pleine
+					throw new Exception();				
 				for (int i = 0 ; i < parties.size() ; i++)
-					if (parties.get(i).nom.equals(req.substring(3))) {						
+					if (parties.get(i).nom.equals(req.substring(3)) && (parties.get(i).nbClients > parties.get(i).getConnectes())) {						
 						parties.get(i).addClient(joueurs.get(joueur));
 						joueurs.remove(joueurs.get(joueur));
 						// Update de la liste pour les clients

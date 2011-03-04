@@ -226,28 +226,30 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 			case(7):
 				System.out.println("->Le client " + clients[joueur - 1] + " quitte !");
 				
+				// On place le joueur dans la salle d'attente
+				listePartie.addJoueur(threads.get(joueur - 1));
+			
+				// On le dit au client
+				threads.get(joueur - 1).client.setMessage("23");
+			
 				// Si la partie n'est pas encore commencée
 				if (threads.size() < nbClients) {
 					System.out.println("-->Retour à la liste");
-					// On place le joueur dans la salle d'attente
-					listePartie.addJoueur(threads.get(joueur - 1));
-					
-					// On le dit au client
-					threads.get(joueur - 1).client.setMessage("23");
-					
+							
 					// On le dit aux autres
 					for (int i = 1 ; i <= threads.size() ; i++)
 						if (i != joueur)
-							threads.get(i - 1).client.setMessage("23");
+							threads.get(i - 1).client.setMessage("8 " + clients[joueur - 1] + " vient de se déconnecter");
 					
 					// On enlève le joueur de la liste
 					threads.remove(joueur - 1);
+					
+					listePartie.rafraichirListe();
 				}					
 				else {
 					// On signale la fin aux joueurs
 					for (int i = 1 ; i <= nbClients ; i++)
-						if (i != joueur)
-							threads.get(i - 1).client.setMessage("23");
+						threads.get(i - 1).client.setMessage("23");
 					this.stop();
 				}
 			//-----
