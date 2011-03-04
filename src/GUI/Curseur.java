@@ -209,16 +209,16 @@ public class Curseur extends JPanel {
     public void couleur(Graphics g, int joueur) {
     	switch(joueur) {
     		case 1 :
-    			g.setColor(Color.CYAN);
+    			g.setColor(Color.BLUE);
     			break;
     		case 3 : 
-    			g.setColor(Color.YELLOW);
+    			g.setColor(Color.RED);
     			break;
     		case 2 : 
-    			g.setColor(Color.PINK);
+    			g.setColor(Color.YELLOW);
     			break;
     		case 4 : 
-    			g.setColor(Color.ORANGE);
+    			g.setColor(Color.GREEN);
     			break;
     	}
     }
