@@ -146,18 +146,6 @@ public class Curseur extends JPanel {
         g.setColor(Color.GRAY);
         g.fillRect(0,0,9*tailleCase,9*tailleCase);
         
-        // Murs extérieurs
-        couleur(g, 1);
-        g.fillRect(0, 0, 3, 9*tailleCase);
-        couleur(g, 2);
-        g.fillRect(9*tailleCase-3, 0, 3, 9*tailleCase);
-        if (reseau.getJeu().getListeJoueurs().size() == 4) {
-        	couleur(g, 4);
-        	g.fillRect(0, 0, 9*tailleCase, 3);
-        	couleur(g, 3);
-        	g.fillRect(0, 9*tailleCase-3, 9*tailleCase, 3);
-        }
-
         // Grille
         g.setColor(Color.BLACK);
         for (int i=0; i < 10; i++) {
@@ -171,8 +159,8 @@ public class Curseur extends JPanel {
     	if (reseau.getJoueur() == reseau.getJoueurCourant()) {
     		reseau.getJeu().miseAJourBis(reseau.getJeu().getListeJoueurs().get(reseau.getJoueur() - 1));
     		for (Case c : reseau.getJeu().getListeJoueurs().get(reseau.getJoueur() - 1).getListeCasesDepl()) {
-    			couleur(g, reseau.getJoueur());
-    			g.fillRect((c.getI() - 1)*tailleCase, (c.getJ() - 1)*tailleCase, tailleCase, tailleCase);
+    			couleurTransparente(g,reseau.getJoueur());
+    			g.fillRect((c.getI() - 1)*tailleCase+1, (c.getJ() - 1)*tailleCase+1, tailleCase-2, tailleCase-2);
     		}        			
     	}   
         
@@ -184,6 +172,19 @@ public class Curseur extends JPanel {
         	couleur(g, J.getNumeroJoueur());
         	g.fillOval((J.getPosition().getI() - 1)*tailleCase+6, (J.getPosition().getJ() - 1)*tailleCase+6, tailleCase-12, tailleCase-12);
         }
+        
+        // Murs extérieurs
+        couleur(g, 1);
+        g.fillRect(0, 0, 3, 9*tailleCase);
+        couleur(g, 2);
+        g.fillRect(9*tailleCase-3, 0, 3, 9*tailleCase);
+        if (reseau.getJeu().getListeJoueurs().size() == 4) {
+        	couleur(g, 4);
+        	g.fillRect(0, 0, 9*tailleCase, 3);
+        	couleur(g, 3);
+        	g.fillRect(0, 9*tailleCase-3, 9*tailleCase, 3);
+        }
+        
         
         // Murs
         for(Mur M : reseau.getJeu().getListeMurs()) {
@@ -258,6 +259,25 @@ public class Curseur extends JPanel {
     		case 5 : 
     			g.setColor(Color.BLACK);
     	}
+    	}
+    	
+    	public void couleurTransparente(Graphics g, int joueur) {
+        	switch(joueur) {
+        		case 1 :
+        			g.setColor(new Color(0,0,255,128));
+        			break;
+        		case 3 : 
+        			g.setColor(new Color(255,0,0,128));
+        			break;
+        		case 2 : 
+        			g.setColor(new Color(255,255,0,128));
+        			break;
+        		case 4 : 
+        			g.setColor(new Color(0,255,0,128));
+        			break;
+        		case 5 : 
+        			g.setColor(Color.BLACK);
+        	}
     }
     
     /**

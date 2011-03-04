@@ -30,9 +30,9 @@ public class Chat extends JPanel {
 		Box vbox = Box.createVerticalBox();
 		Box hbox = Box.createHorizontalBox();
 		
-		this.setMinimumSize(new Dimension(400, 500));
-		this.setPreferredSize(new Dimension(400, 500));
-		discussion.setPreferredSize(new Dimension(350, 400));
+		this.setMinimumSize(new Dimension(900, 300));
+		this.setPreferredSize(new Dimension(900, 300));
+		discussion.setPreferredSize(new Dimension(800, 200));
 		discussion.setEditable(false);
 		phrase.addKeyListener(new KeyAdapter() {
 			@Override

@@ -21,7 +21,7 @@ public class FenetreJeu extends JFrame {
 	public FenetreJeu(final Reseau reseau, SelectionPartie parties) {
 		super();
 		this.parties = parties;
-		
+			
 		// Fenêtre de jeu
 		this.setPreferredSize(new Dimension(901, 600));
 		
@@ -33,11 +33,28 @@ public class FenetreJeu extends JFrame {
 		// Chat
 		Chat chat = new Chat(reseau);
 		
+		// Liste joueur		
+		Box lbox = Box.createVerticalBox();
+		lbox.setVisible(true);
+		ListeJoueurs ljoueurs = new ListeJoueurs();
+		ljoueurs.setVisible(true);
+		ljoueurs.setPreferredSize(new Dimension(50,50));
+		Joueur[] list = new Joueur[4];
+		list[0]=new Joueur(1,"paulo");
+		list[1]=new Joueur(2,"henri");
+		list[2]=new Joueur(3,"dominique");
+		list[3]=new Joueur(4,"heinrich");
+		ljoueurs.setListData(list);
+		hbox.add(ljoueurs); 
+		
 		// Ajout du controleur à reseau
 		reseau.setControleur(chat.getControleur());
 		
 		// Ajout de la fenêtre
 		reseau.setFenetreJeu(this);
+		
+		// Ajout de la liste des joueurs
+		reseau.setListeJoueur(ljoueurs);
 		
 		Curseur grille = new Curseur(reseau);
 		grille.setPreferredSize(getMaximumSize());
@@ -49,7 +66,7 @@ public class FenetreJeu extends JFrame {
 		vbox.add(hbox);
 		
 		hbox.add(grille);
-		hbox.add(chat);		
+		vbox.add(chat);		
 		
 		// Connaitre lorsque l'on ferme la fenêtre
 		this.addWindowListener(new WindowAdapter() {

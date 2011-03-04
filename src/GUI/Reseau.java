@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Observable;
+import GUI.Joueur;
+import GUI.ListeJoueurs;
 
 import javax.swing.JOptionPane;
 
@@ -26,7 +28,7 @@ public class Reseau extends Observable{
 	private SelectionPartie selectionPartie;
 	private	ArrayList<Partie> parties;	// Liste des parties
 	private FenetreJeu fenetreJeu;
-	//private ListeJoueurs listeJoueurs;	// Liste des joueurs de la partie
+	private ListeJoueurs listeJoueurs;	// Liste des joueurs de la partie
 	
 	/**
 	 * Constructeur
@@ -84,7 +86,7 @@ public class Reseau extends Observable{
 	private void requete(String req) {
 		if (req == null)
 			return;
-		
+		System.out.println("##" + req + " | " + req.split(" ").length);
 		// Séparation des valeurs
 		String[] args = req.split(" ");
 		
@@ -103,7 +105,7 @@ public class Reseau extends Observable{
 				break;
 			// MURH
 			case(4):
-				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur horizontal en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
+				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1]) - 1] + " ajoute un mur horizontal en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
 				if (args.length == 4) {
 					// Ajout du mur à la représentation du client
 					jeu.mur(Integer.parseInt(args[1]), 0, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
@@ -115,7 +117,7 @@ public class Reseau extends Observable{
 				break;
 			// MURV
 			case(5):
-				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur vertical en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
+				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1]) - 1] + " ajoute un mur vertical en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
 				if (args.length == 4)
 					jeu.mur(Integer.parseInt(args[1]), 1, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 				else
@@ -123,7 +125,7 @@ public class Reseau extends Observable{
 				break;
 			// DEPLACER
 			case(6):
-				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " se déplace en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
+				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1]) - 1] + " se déplace en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
 				if (args.length == 4) {
 					// Déplacement du pion dans la représentation du client
 					jeu.deplacer(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
@@ -144,7 +146,12 @@ public class Reseau extends Observable{
 				break;
 			// Liste joueurs
 			case(10):				
-				joueurs = req.substring(2).split(";");//TODO vérifier le parsage avec le premier ;
+				joueurs = req.substring(4).split(";");
+				Joueur[] listeJoueurs = new Joueur[joueurs.length];
+				for (int i = 0 ; i < joueurs.length ; i++)
+					listeJoueurs[i] = new Joueur(i, joueurs[i]);
+				this.listeJoueurs.setListData(listeJoueurs);
+					
 				break;
 			// Numéro dans le jeu
 			case(11):
@@ -179,10 +186,11 @@ public class Reseau extends Observable{
 				break;
 			// Récupérer le joueur courant
 			case(15):
-				if (args.length < 2)
+				if (args.length != 2)
 					return;
 				joueurCourant = Integer.parseInt(args[1]);
-				System.out.println("->Le joueur courant est " + joueurs[Integer.parseInt(args[1])]);
+				System.out.println("->Le joueur courant est " + joueurs[Integer.parseInt(args[1]) - 1]);
+				this.listeJoueurs.setSelectedIndex(joueurCourant - 1);
 				break;
 			// Récupérer la liste des parties
 			case(20):
@@ -352,9 +360,9 @@ public class Reseau extends Observable{
 		this.fenetreJeu = fenetreJeu;
 	}
 	
-	//public void setListeJoueur(ListeJoueurs listeJoueurs) {
-	//	this.listeJoueurs = listeJoueurs;
-	//}	
+	public void setListeJoueur(ListeJoueurs listeJoueurs) {
+		this.listeJoueurs = listeJoueurs;
+	}	
 }
 
 class Partie {

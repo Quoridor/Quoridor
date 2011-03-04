@@ -29,6 +29,7 @@ public class FenetreConnexion extends JFrame implements ActionListener{
 		
 		
 		Box hbox1 = Box.createHorizontalBox();
+		System.out.println(this.getClass().getResource("utilisateur.png"));
 		hbox1.add(new JLabel("Utilisateur : ",new ImageIcon("images/utilisateur.png"), JLabel.LEFT));
 		hbox1.add(nom);
 		

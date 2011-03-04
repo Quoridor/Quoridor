@@ -56,7 +56,8 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 		String buf = "10 ";
 		for (String s : clients)
 			buf += (";" + s);
-		threads.get(threads.size() - 1).client.setMessage(buf);
+		for (int i = 1 ; i <= threads.size() ; i++)
+			threads.get(i - 1).client.setMessage(buf);
 		
 		// Envoi du numéro dans le jeu du client
 		for (int i = 1 ; i <= threads.size() ; i++)
@@ -84,6 +85,13 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 			threads.get(threads.size() - 1).client.setMessage("11 " + threads.size());
 			threads.get(threads.size() - 1).client.setMessage("3");
 		}
+		
+		// Envoi de la liste des joueurs connectés
+		String buf = "10 ";
+		for (String s : clients)
+			buf += (";" + s);
+		for (int i = 1 ; i <= threads.size() ; i++)
+			threads.get(i - 1).client.setMessage(buf);
 		
 		// Affichage des joueurs
 		System.out.println("Début de partie\n\tJoueurs :");
