@@ -36,7 +36,6 @@ public class ListePartie extends Thread {
 		System.out.println("->Salle d'attente lancée");
 		
 		while (true) {
-			//System.out.println(joueurs.size());
 			// Traiter les requetes
 			for (int i = 0 ; i < joueurs.size() ; i++) {
 				requete(joueurs.get(i).serveur.tryGetMessage(20), i);				
@@ -56,6 +55,8 @@ public class ListePartie extends Thread {
 		
 		// Séparation des valeurs
 		String[] args = req.split(" ");
+		
+		System.out.println(args[0]);
 		
 		try {
 			switch (Integer.parseInt(args[0])) {

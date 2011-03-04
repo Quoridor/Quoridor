@@ -66,10 +66,10 @@ public class SelectionPartie extends JFrame  implements ActionListener{
 			rafraichir();
 		}
 		// Rejoindre une partie
-		if (e.getActionCommand().equals("Se connecter")) { //TODO moche
+		if (e.getActionCommand().equals("Se connecter") && liste.getSelectedIndices().length != 0) { //TODO moche
 			reseau.rejoindre(((Partie)modele.get(liste.getSelectedIndices()[0])).nom); //TODO Vérifier s'il ne peut pas y avoir un problème lors d'une latence trop élevée
 			this.setVisible(false);			
-			new FenetreJeu(reseau);
+			new FenetreJeu(reseau, this);
 		}
 		// Créer une partie
 		if (e.getActionCommand().equals("Créer une partie")) { //TODO moche

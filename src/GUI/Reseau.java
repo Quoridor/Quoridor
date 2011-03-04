@@ -73,11 +73,6 @@ public class Reseau extends Observable{
 		this.recupererParties();
 	}
 	
-	public void recupererParties() {
-		// TODO Changer de place
-		out.println("20");		
-	}
-	
 	/**
 	 * Fonction qui gère les informations reçues du serveur
 	 * @param req Requete reçue
@@ -189,6 +184,7 @@ public class Reseau extends Observable{
 				break;
 			// Retourner à la liste de sélection de partie
 			case(23):
+				System.out.println("->Retour à la liste des parties");
 				fenetreJeu.retourListe();
 				break;
 			default:
@@ -214,6 +210,11 @@ public class Reseau extends Observable{
 		out.println("3 " + nom);
 	}
 	
+	public void recupererParties() {
+		// TODO Changer de place
+		out.println("20");		
+	}
+	
 	/**
 	 * Envoie la requête pour récupérer la liste des joueurs
 	 */
@@ -226,14 +227,6 @@ public class Reseau extends Observable{
 	 */
 	public void recupererJoueur() {
 		out.println("11");
-	}
-	
-	/**
-	 * Fonction qui dit au serveur que l'on se déconnecte
-	 * @return		Retourne false si il y a une erreur
-	 */
-	public void quitter() {
-		out.println("7");
 	}
 	
 	/**

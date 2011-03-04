@@ -15,9 +15,11 @@ import java.awt.event.WindowListener;
 
 public class FenetreJeu extends JFrame {
 	static final long serialVersionUID = 1;
+	private SelectionPartie parties;
 	
-	public FenetreJeu(final Reseau reseau) {
+	public FenetreJeu(final Reseau reseau, SelectionPartie parties) {
 		super();
+		this.parties = parties;
 		
 		// Fenêtre de jeu
 		this.setPreferredSize(new Dimension(901, 600));
@@ -39,7 +41,7 @@ public class FenetreJeu extends JFrame {
 		Curseur grille = new Curseur(reseau);
 		grille.setPreferredSize(getMaximumSize());
 		
-		ControleurBoutons controleurBoutons = new ControleurBoutons(grille);
+		ControleurBoutons controleurBoutons = new ControleurBoutons(grille, this, reseau);
 				
 		Boutons boutons = new Boutons(controleurBoutons);
 		vbox.add(boutons);
@@ -54,8 +56,8 @@ public class FenetreJeu extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				// Dire au serveur que l'on quitte la partie
-				reseau.quitter();
-				retourListe();
+				reseau.signalerFin();
+				//retourListe();
 			}
 			
 		});
@@ -72,5 +74,7 @@ public class FenetreJeu extends JFrame {
 		this.dispose();
 		
 		// Affichage de la liste
+		parties.setVisible(true);
+		
 	}
 }

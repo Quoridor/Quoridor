@@ -62,9 +62,9 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 		threads.get(threads.size() - 1).client.setMessage("11 " + threads.size());
 		
 		// Envoi du message de connexion aux autres joueurs
-		for (int i = 1 ; i <= threads.size() ; i++)
-			if (i != threads.size() - 1) // Sauf à lui-même
-				threads.get(i - 1).client.setMessage("8 " + clients[i - 1] + " vient de se connecter");
+		//for (int i = 1 ; i <= threads.size() ; i++)
+		//	if (i != threads.size() - 1) // Sauf à lui-même
+		//		threads.get(i - 1).client.setMessage("8 " + clients[i - 1] + " vient de se connecter");
 		
 		// Début de la partie
 		if (threads.size() == nbClients) {
@@ -129,6 +129,8 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 	public boolean requete(String req, int cmd, int joueur) {
 		if (req == null)
 			return false;
+		
+		System.out.println("-->Requete : " + req);
 		
 		// Séparation des valeurs
 		String[] args = req.split(" ");
@@ -226,6 +228,7 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 				
 				// Si la partie n'est pas encore commencée
 				if (threads.size() < nbClients) {
+					System.out.println("-->Retour à la liste");
 					// On place le joueur dans la salle d'attente
 					listePartie.addJoueur(threads.get(joueur - 1));
 					
@@ -277,7 +280,7 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 					System.out.println("->Le joueur " + clients[joueur - 1] + " passe son tour");
 				}
 			default:
-				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));
+				System.err.println("-->Numéro de requête invalide : " + Integer.parseInt(args[0]));
 			}
 		} catch (Exception e) {
 			System.err.println("->Requête invalide : " + req);

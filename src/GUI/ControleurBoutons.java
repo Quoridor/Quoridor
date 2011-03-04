@@ -6,9 +6,13 @@ import java.awt.event.ActionListener;
 
 public class ControleurBoutons implements ActionListener {
 	private Curseur curseur;
+	private FenetreJeu fenetre;
+	private Reseau reseau;
 	
-	ControleurBoutons(Curseur curseur) {
+	ControleurBoutons(Curseur curseur, FenetreJeu fenetre, Reseau reseau) {
 		this.curseur = curseur;
+		this.fenetre = fenetre;
+		this.reseau = reseau;
 	}
 
 	@Override
@@ -19,9 +23,7 @@ public class ControleurBoutons implements ActionListener {
 			this.curseur.ChangeFonction(2);
 		if (e.getActionCommand().equals("Mur Vertical"))
 			this.curseur.ChangeFonction(3);
-		//if (e.getActionCommand().equals("Règle du jeu"))
-			//this.curseur.ChangeFonction(4);
-		
+		if (e.getActionCommand().equals("Accueil"))
+			this.reseau.signalerFin();
 	}
-
 }

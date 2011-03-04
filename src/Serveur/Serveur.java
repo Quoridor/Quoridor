@@ -16,7 +16,7 @@ public class Serveur {
 		ServerSocket serverSocket = null;
 		
 		if (args.length != 1) {
-			System.err.println("Mauvais nombre d'arguments !\n\tUsage : serveur port");
+			System.err.println("Mauvais nombre d'arguments !\n\tUsage : Serveur port");
 			System.exit(-1);
 		}
 		// Démarrage
