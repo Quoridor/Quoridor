@@ -35,9 +35,9 @@ public class CellJoueur extends JLabel implements ListCellRenderer {
 		}	
 	    else	    
 	    {
-	       setBackground(Color.BLACK);
+	    	setBackground(Color.BLACK);
 	    }
-		switch(index - 1) {
+		switch(joueur.numero) {
 		case 1 :
 			setForeground(Color.BLUE);
 			break;
@@ -53,8 +53,7 @@ public class CellJoueur extends JLabel implements ListCellRenderer {
 	}
 	    
 	    setIcon(joueur.icone);
-	    setText(joueur.nom);
-	    
+	    setText(joueur.nom);	    	    
 	    setEnabled(list.isEnabled());
 	    setFont(list.getFont());
 	    setOpaque(true);

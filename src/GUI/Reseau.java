@@ -96,12 +96,11 @@ public class Reseau extends Observable{
 			case(2):
 				//System.out.println("A vous de jouer !");
 				curseur.setJouer(true);
-				break;
-			
+				break;			
 			// Envoyer son nom
 			case(3):
 				System.out.println("->Le serveur demande mon nom");
-				envoyerNom(nom);				
+				envoyerNom(nom);			
 				break;
 			// MURH
 			case(4):
@@ -118,8 +117,11 @@ public class Reseau extends Observable{
 			// MURV
 			case(5):
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1]) - 1] + " ajoute un mur vertical en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
-				if (args.length == 4)
+				if (args.length == 4) {
 					jeu.mur(Integer.parseInt(args[1]), 1, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					// Rafraichissement de l'affichage
+					curseur.repaint();
+				}
 				else
 					throw new Exception();
 				break;
@@ -177,10 +179,9 @@ public class Reseau extends Observable{
 				if (joueur == Integer.parseInt(args[1])) {
 					System.out.println("->Victoire");
 					fenetreJeu.popup("Vous avez gagné !", "Victoire");
-					///controleur.ecrire("## Vous avez gagné");
 				}
 				else {
-					System.out.println("->Défaite, le joueur " + joueurs[Integer.parseInt(args[1])] + " gagne...");
+					System.out.println("->Défaite, le joueur " + joueurs[Integer.parseInt(args[1]) - 1] + " gagne...");
 					fenetreJeu.popup("Vous avez perdu ! Le joueur " + joueurs[Integer.parseInt(args[1]) - 1] + " gagne", "Défaite");					//controleur.ecrire("## Vous avez perdu ! Le joueur " + joueurs[Integer.parseInt(args[1]) - 1] + " gagne");
 				}
 				break;
@@ -236,7 +237,6 @@ public class Reseau extends Observable{
 	}
 	
 	public void recupererParties() {
-		// TODO Changer de place
 		out.println("20");		
 	}
 	
@@ -326,7 +326,6 @@ public class Reseau extends Observable{
 	 */
 	public void rejoindre(String nom) {
 		out.println("22 " + nom);
-		//TODO connexion avec la fenetre avec la liste des joueurs pour savoir si on est réellement connecté
 	}
 	
 	/**

@@ -51,9 +51,6 @@ public class Chat extends JPanel {
 		
 		envoyer.addActionListener(controleur);
 		this.add(vbox);
-		phrase.setText("Message");
-		
-
 	}
 	
 	public void ecrire(String texte) {

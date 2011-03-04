@@ -124,6 +124,9 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 				// On signale la victoire aux joueurs
 				for (int i = 1 ; i <= nbClients ; i++)
 					threads.get(i - 1).client.setMessage("14 " + courant);
+				// On signale la fin aux joueurs
+				for (int i = 1 ; i <= nbClients ; i++)
+					threads.get(i - 1).client.setMessage("23");
 				//TODO Gestion des scores
 				this.stop();
 			}
