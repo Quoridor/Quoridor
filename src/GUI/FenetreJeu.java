@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 
 import javax.swing.Box;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import Jeu.Jeu;
 
@@ -76,5 +77,10 @@ public class FenetreJeu extends JFrame {
 		// Affichage de la liste
 		parties.setVisible(true);
 		
+	}
+	
+	// Afficher un popup
+	public void popup(String texte, String titre) {
+		JOptionPane.showMessageDialog(null, texte, titre, JOptionPane.INFORMATION_MESSAGE);
 	}
 }

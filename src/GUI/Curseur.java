@@ -7,10 +7,8 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -57,8 +55,8 @@ public class Curseur extends JPanel {
     	this.reseau.recupererJoueurs();
     	
     	Image img = Toolkit.getDefaultToolkit().createImage("");
-    	curseurVide= Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(0,0), "position");
-    	 	
+    	curseurVide= Toolkit.getDefaultToolkit().createCustomCursor(img, new Point(0,0), "position");    	
+    	
         setPreferredSize(new Dimension(9*tailleCase, 9*tailleCase+1));
         this.setMinimumSize(new Dimension(9*tailleCase, 9*tailleCase+1));
         this.setMaximumSize(new Dimension(9*tailleCase, 9*tailleCase+1));
@@ -144,52 +142,68 @@ public class Curseur extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        Graphics2D g2 = (Graphics2D) g;
-       	g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-       						RenderingHints.VALUE_ANTIALIAS_ON);
-       	g2.setRenderingHint(RenderingHints.KEY_RENDERING, 
-       						RenderingHints.VALUE_RENDER_QUALITY);
-        
         // Damier
-        g2.setColor(Color.WHITE);
-        g2.fillRect(0,0,9*tailleCase,9*tailleCase);
+        g.setColor(Color.GRAY);
+        g.fillRect(0,0,9*tailleCase,9*tailleCase);
         
         // Murs extérieurs
         couleur(g, 1);
-        g2.fillRect(0, 0, 3, 9*tailleCase);
+        g.fillRect(0, 0, 3, 9*tailleCase);
         couleur(g, 2);
-        g2.fillRect(9*tailleCase-3, 0, 3, 9*tailleCase);
+        g.fillRect(9*tailleCase-3, 0, 3, 9*tailleCase);
         if (reseau.getJeu().getListeJoueurs().size() == 4) {
         	couleur(g, 4);
-        	g2.fillRect(0, 0, 9*tailleCase, 3);
+        	g.fillRect(0, 0, 9*tailleCase, 3);
         	couleur(g, 3);
-        	g2.fillRect(0, 9*tailleCase-3, 9*tailleCase, 3);
+        	g.fillRect(0, 9*tailleCase-3, 9*tailleCase, 3);
         }
 
         // Grille
-        g2.setColor(Color.BLACK);
+        g.setColor(Color.BLACK);
         for (int i=0; i < 10; i++) {
-            g2.drawLine(0, i*tailleCase, 9*tailleCase, i*tailleCase);           
-            g2.drawLine(i*tailleCase, 0, i*tailleCase, 9*tailleCase);
+            g.drawLine(0, i*tailleCase, 9*tailleCase, i*tailleCase);           
+            g.drawLine(i*tailleCase, 0, i*tailleCase, 9*tailleCase);
         }
         
         // Affichage du jeu
+        
+        // Si le joueur qui doit jouer est nous on affiche les possibilités
+    	if (reseau.getJoueur() == reseau.getJoueurCourant()) {
+    		reseau.getJeu().miseAJourBis(reseau.getJeu().getListeJoueurs().get(reseau.getJoueur() - 1));
+    		for (Case c : reseau.getJeu().getListeJoueurs().get(reseau.getJoueur() - 1).getListeCasesDepl()) {
+    			couleur(g, reseau.getJoueur());
+    			g.fillRect((c.getI() - 1)*tailleCase, (c.getJ() - 1)*tailleCase, tailleCase, tailleCase);
+    		}        			
+    	}   
+        
+
         // Pions
         for(Joueur J : reseau.getJeu().getListeJoueurs()) {
+        	couleur(g,5);
+        	g.fillOval((J.getPosition().getI() - 1)*tailleCase+4, (J.getPosition().getJ() - 1)*tailleCase+4, tailleCase-8, tailleCase-8);
         	couleur(g, J.getNumeroJoueur());
-        	g2.fillOval((J.getPosition().getI() - 1)*tailleCase+3, (J.getPosition().getJ() - 1)*tailleCase+3, tailleCase-6, tailleCase-6);
+        	g.fillOval((J.getPosition().getI() - 1)*tailleCase+6, (J.getPosition().getJ() - 1)*tailleCase+6, tailleCase-12, tailleCase-12);
         }
+        
         // Murs
         for(Mur M : reseau.getJeu().getListeMurs()) {
         	// Si c'est les murs de base
         	if (M.getNumeroJoueur() != 0) {
-	        	couleur(g, M.getNumeroJoueur());
-	        	if(M.getSens() == 0)
+	        	//couleur(g, M.getNumeroJoueur());
+	        	if(M.getSens() == 0) {
 	        		// Horizontal
-	        		g2.fillRect((M.getI()-1)*tailleCase, (M.getJ()-1)*tailleCase-5, tailleCase, 7);
-	        	else
-	        		g2.fillRect((M.getI()-1)*tailleCase-5,(M.getJ()-1)*tailleCase, 7, tailleCase);
-	        }          
+		        	couleur(g, 5);
+	        		g.fillRect((M.getI()-1)*tailleCase, (M.getJ()-1)*tailleCase-4, tailleCase, 9);
+	        		couleur(g, M.getNumeroJoueur());
+	        		g.fillRect((M.getI()-1)*tailleCase, (M.getJ()-1)*tailleCase-3, tailleCase, 7);
+	        	}
+	        	else {
+		        	couleur(g, 5);
+	        		g.fillRect((M.getI()-1)*tailleCase-4,(M.getJ()-1)*tailleCase, 9, tailleCase);
+	        	    couleur(g, M.getNumeroJoueur());
+	        		g.fillRect((M.getI()-1)*tailleCase-3,(M.getJ()-1)*tailleCase, 7, tailleCase);
+	        	}
+	        	}          
         }
         
         // Curseur si etat actif
@@ -197,16 +211,29 @@ public class Curseur extends JPanel {
         	couleur(g, reseau.getJoueur());
             switch(fonction) {
                 case 1:
-                	g2.fillOval((abscisse/tailleCase)*tailleCase+3,(ordonnee/tailleCase)*tailleCase+3,tailleCase-6,tailleCase-6);
+                	couleur(g,5);
+                	g.fillOval(((abscisse/tailleCase)*tailleCase+4), ((ordonnee/tailleCase)*tailleCase+4), tailleCase-8, tailleCase-8);
+                	couleur(g, reseau.getJoueur());
+                	g.fillOval((abscisse/tailleCase)*tailleCase+6, ((ordonnee/tailleCase)*tailleCase+6), tailleCase-12, tailleCase-12);                	
                 	break;
                 case 2:
-                	g2.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-5,80,7);
+                	couleur(g, 5);
+                	g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-4,2*tailleCase,9);
+
+                	couleur(g, reseau.getJoueur());
+
+                	g.fillRect((abscisse/tailleCase)*tailleCase,(ordonnee/tailleCase)*tailleCase-3,2*tailleCase,7);
                 	break;
                 case 3:
-                	g2.fillRect((abscisse/tailleCase)*tailleCase-5,(ordonnee/tailleCase)*tailleCase,7,80);
+                	couleur(g, 5);
+                	g.fillRect((abscisse/tailleCase)*tailleCase-4,(ordonnee/tailleCase)*tailleCase,9,2*tailleCase);
+
+                	couleur(g, reseau.getJoueur());
+
+                	g.fillRect((abscisse/tailleCase)*tailleCase-3,(ordonnee/tailleCase)*tailleCase,7,2*tailleCase);
                 	break;
-            }
-        }
+            	}
+        	}            
     }
     
     /**
@@ -228,6 +255,8 @@ public class Curseur extends JPanel {
     		case 4 : 
     			g.setColor(Color.GREEN);
     			break;
+    		case 5 : 
+    			g.setColor(Color.BLACK);
     	}
     }
     

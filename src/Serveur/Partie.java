@@ -59,7 +59,8 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 		threads.get(threads.size() - 1).client.setMessage(buf);
 		
 		// Envoi du numéro dans le jeu du client
-		threads.get(threads.size() - 1).client.setMessage("11 " + threads.size());
+		for (int i = 1 ; i <= threads.size() ; i++)
+			threads.get(threads.size() - 1).client.setMessage("11 " + threads.size());
 		
 		// Envoi du message de connexion aux autres joueurs
 		//for (int i = 1 ; i <= threads.size() ; i++)
@@ -77,6 +78,12 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 	@Override
 	public void run() {
 		courant = 1;
+		
+		// Envoi du numéro et demande des noms
+		for (int i = 1 ; i <= threads.size() ; i++) {
+			threads.get(threads.size() - 1).client.setMessage("11 " + threads.size());
+			threads.get(threads.size() - 1).client.setMessage("3");
+		}
 		
 		// Affichage des joueurs
 		System.out.println("Début de partie\n\tJoueurs :");
@@ -108,8 +115,7 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 				System.out.println("->Le joueur " + clients[courant - 1] + " gagne !");
 				// On signale la victoire aux joueurs
 				for (int i = 1 ; i <= nbClients ; i++)
-					if (i != courant)
-						threads.get(i - 1).client.setMessage("14 " + courant);
+					threads.get(i - 1).client.setMessage("14 " + courant);
 				//TODO Gestion des scores
 				this.stop();
 			}
@@ -117,6 +123,10 @@ private ArrayList<Pipe> threads = new ArrayList<Pipe>();
 			// Changement de joueur
 			System.out.println("->Changement de joueur");
 			courant = courant % nbClients + 1;			
+			
+			// Signaler aux clients qui c'est qui joue
+			for (int i = 1 ; i <= threads.size() ; i++)
+				threads.get(i - 1).client.setMessage("15 " + courant);
 		}			
 	}
 	/**

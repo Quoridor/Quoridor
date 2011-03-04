@@ -50,41 +50,44 @@ public class Case {
 	}
 
 
-public void miseAJourVoisins(Jeu jeu){
-	this.listeVoisins = new ArrayList<Case>();
+	public void miseAJourVoisins(Jeu jeu){
+		this.listeVoisins = new ArrayList<Case>();
+		
+		// Haut
+		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()-1][this.getJ()], 0)))){
+			this.listeVoisins.add(jeu.getTabCase()[this.getI()-1][this.getJ()]);
+			//System.out.println("haut");
+		}
 	
-	// Haut
-	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()-1][this.getJ()], 0)))){
-		this.listeVoisins.add(jeu.getTabCase()[this.getI()-1][this.getJ()]);
-		//System.out.println("haut");
-	}
-
-	// Bas
-	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()+1][this.getJ()], 0)))){
-		this.listeVoisins.add(jeu.getTabCase()[this.getI()+1][this.getJ()]);
-		//System.out.println("bas");
+		// Bas
+		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()+1][this.getJ()], 0)))){
+			this.listeVoisins.add(jeu.getTabCase()[this.getI()+1][this.getJ()]);
+			//System.out.println("bas");
+			
+		}
+	
+		// Gauche
+		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()-1], 0)))){
+			this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()-1]);
+			//System.out.println("gauche");
+		}	
+	
+		// Droite
+		if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()+1], 0)))){
+			this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()+1]);
+			//System.out.println("droite");
+		}
 		
 	}
 
-	// Gauche
-	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()-1], 0)))){
-		this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()-1]);
-		//System.out.println("gauche");
-	}	
-
-	// Droite
-	if( !(jeu.getListeMurs().contains(new Mur(this,jeu.getTabCase()[this.getI()][this.getJ()+1], 0)))){
-		this.listeVoisins.add(jeu.getTabCase()[this.getI()][this.getJ()+1]);
-		//System.out.println("droite");
-	}
 	
-}
-
-@Override
-public boolean equals(Object obj) {
-	Case buf = (Case) obj;
-	return (buf.getJ() == this.j) && (buf.getI() == this.i);
-}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		Case buf = (Case) obj;
+		return (buf.getJ() == this.j) && (buf.getI() == this.i);
+	}
 	
 }
 

@@ -91,6 +91,49 @@ public class Jeu {
 
 			}
 		}
+	
+	public boolean deplacerBis(int numeroJoueur, int i, int j) {
+		Joueur joueurDeplace=this.listeJoueurs.get(numeroJoueur-1);
+		Case caseArrivee = tabCase[i][j];
+		//Tester si caseArrivee est dans la liste des voisins de caseDepart !
+		Case caseDepart = joueurDeplace.getPosition();
+
+		if (caseDepart.equals(caseArrivee))
+			return false;
+		
+		if(caseDepart.getListeVoisins().contains(caseArrivee))
+		{
+			if (caseArrivee.getJoueur()==null) {				
+				return true;
+			} 
+			return false;
+		}
+
+		else
+		{
+			ArrayList<Case> pionsvoisins = new ArrayList<Case>();
+			for(Case cases : caseDepart.getListeVoisins()){
+					if (cases.getJoueur()!=null){
+						pionsvoisins.add(cases);
+					}
+			}
+			int nombrepionsvoisins = pionsvoisins.size();
+			if (nombrepionsvoisins==0) return false;
+			else {
+				for(Case casevoisine : pionsvoisins) {
+					if ((casevoisine.getListeVoisins().contains(caseArrivee))&&((i==caseDepart.getI()+2)||(i==caseDepart.getI()-2)||(j==caseDepart.getJ()+2)||(j==caseDepart.getJ()-2))){
+						{ return true;}
+					}
+					else if((casevoisine.getListeVoisins().contains(caseArrivee))&&!(casevoisine.getListeVoisins().contains(tabCase[2*(casevoisine.getI())-caseDepart.getI()][2*(casevoisine.getJ())-caseDepart.getJ()]))){
+						{ return true;}
+					}
+					}
+				return false;
+				}
+
+
+			}
+		}
 
 	public boolean mur(int numeroJoueur, int sens, int i, int j) {
 		if(this.listeJoueurs.get(numeroJoueur-1).getNombreMurs()>=1){
@@ -223,6 +266,20 @@ public class Jeu {
 
 	public ArrayList<Joueur> getListeJoueurs() {
 		return listeJoueurs;
+	}
+	
+	public void miseAJour() {
+		for (Case[] tab : tabCase)
+			for (Case c : tab)
+				c.miseAJourVoisins(this);			
+	}
+	
+	public void miseAJourBis(Joueur jo) {
+		jo.clearListeCasesDepl();
+		for(int i=Math.max(jo.getPosition().getI() - 2, 1); i < Math.min(jo.getPosition().getI() + 3, 10); i++)
+			for(int j=Math.max(jo.getPosition().getJ() - 2, 1); j<Math.min(jo.getPosition().getJ() + 3, 10); j++)				
+				if(deplacerBis(jo.getNumeroJoueur(), i, j))
+					jo.getListeCasesDepl().add(getTabCase()[i][j]);	
 	}
 
 	public void setListeJoueurs(ArrayList<Joueur> listeJoueurs) {

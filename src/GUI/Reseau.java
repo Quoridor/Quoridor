@@ -9,12 +9,15 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import javax.swing.JOptionPane;
+
 import Jeu.Jeu;
 
 public class Reseau extends Observable{
 	private BufferedReader in;			// Socket en lecture
 	private PrintWriter out;			// Socket en ecriture
 	private int joueur;					// Numéro du joueur
+	private int joueurCourant;
 	private String[] joueurs;			// Liste des joueurs
 	private String nom;					// Nom du joueur
 	private Jeu jeu;					// Instance de jeu
@@ -23,6 +26,7 @@ public class Reseau extends Observable{
 	private SelectionPartie selectionPartie;
 	private	ArrayList<Partie> parties;	// Liste des parties
 	private FenetreJeu fenetreJeu;
+	//private ListeJoueurs listeJoueurs;	// Liste des joueurs de la partie
 	
 	/**
 	 * Constructeur
@@ -102,7 +106,7 @@ public class Reseau extends Observable{
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur horizontal en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
 				if (args.length == 4) {
 					// Ajout du mur à la représentation du client
-					jeu.poseMur(Integer.parseInt(args[1]), 0, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					jeu.mur(Integer.parseInt(args[1]), 0, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 					// Rafraichissement de l'affichage
 					curseur.repaint();
 				}	
@@ -113,7 +117,7 @@ public class Reseau extends Observable{
 			case(5):
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " ajoute un mur vertical en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
 				if (args.length == 4)
-					jeu.poseMur(Integer.parseInt(args[1]), 1, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					jeu.mur(Integer.parseInt(args[1]), 1, Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 				else
 					throw new Exception();
 				break;
@@ -122,7 +126,8 @@ public class Reseau extends Observable{
 				System.out.println("Le joueur " + joueurs[Integer.parseInt(args[1])] + " se déplace en (" + Integer.parseInt(args[2]) + "," + Integer.parseInt(args[3]) + ")");
 				if (args.length == 4) {
 					// Déplacement du pion dans la représentation du client
-					jeu.getListeJoueurs().get(Integer.parseInt(args[1]) - 1).setCoord(Integer.parseInt(args[2]), Integer.parseInt(args[3]), jeu);
+					jeu.deplacer(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					//jeu.getListeJoueurs().get(Integer.parseInt(args[1]) - 1).setCoord(Integer.parseInt(args[2]), Integer.parseInt(args[3]), jeu);
 					// Rafraichissement de l'affichage
 					curseur.repaint();
 				}
@@ -162,10 +167,22 @@ public class Reseau extends Observable{
 			case(14):
 				if (args.length < 2)
 					return;
-				if (joueur == Integer.parseInt(args[1]))
+				if (joueur == Integer.parseInt(args[1])) {
 					System.out.println("->Victoire");
-				else
+					fenetreJeu.popup("Vous avez gagné !", "Victoire");
+					///controleur.ecrire("## Vous avez gagné");
+				}
+				else {
 					System.out.println("->Défaite, le joueur " + joueurs[Integer.parseInt(args[1])] + " gagne...");
+					fenetreJeu.popup("Vous avez perdu ! Le joueur " + joueurs[Integer.parseInt(args[1]) - 1] + " gagne", "Défaite");					//controleur.ecrire("## Vous avez perdu ! Le joueur " + joueurs[Integer.parseInt(args[1]) - 1] + " gagne");
+				}
+				break;
+			// Récupérer le joueur courant
+			case(15):
+				if (args.length < 2)
+					return;
+				joueurCourant = Integer.parseInt(args[1]);
+				System.out.println("->Le joueur courant est " + joueurs[Integer.parseInt(args[1])]);
 				break;
 			// Récupérer la liste des parties
 			case(20):
@@ -260,6 +277,10 @@ public class Reseau extends Observable{
 		return joueur;
 	}
 	
+	public int getJoueurCourant() {
+		return joueurCourant;
+	}
+	
 	public void finalize()
     {
          signalerFin();   
@@ -331,7 +352,9 @@ public class Reseau extends Observable{
 		this.fenetreJeu = fenetreJeu;
 	}
 	
-	
+	//public void setListeJoueur(ListeJoueurs listeJoueurs) {
+	//	this.listeJoueurs = listeJoueurs;
+	//}	
 }
 
 class Partie {
