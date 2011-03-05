@@ -4,9 +4,12 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -34,16 +37,14 @@ public class Chat extends JPanel {
 		this.setPreferredSize(new Dimension(900, 300));
 		discussion.setPreferredSize(new Dimension(800, 200));
 		discussion.setEditable(false);
-		phrase.addKeyListener(new KeyAdapter() {
+		discussion.setLineWrap(true);
+		phrase.addActionListener(new ActionListener() {
 			@Override
-			public void keyTyped(KeyEvent event) {
-				System.out.println("Touche pressée : " + event.getKeyCode() + " " + KeyEvent.VK_ENTER);
-				if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-					controleur.envoyer();
-				}
+			public void actionPerformed(ActionEvent e) {
+				controleur.envoyer();
 			}
 		});
-		vbox.add(discussion);
+		vbox.add(new JScrollPane(discussion));
 		vbox.add(hbox);
 		
 		hbox.add(phrase);

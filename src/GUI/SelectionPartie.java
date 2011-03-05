@@ -32,7 +32,7 @@ public class SelectionPartie extends JFrame  implements ActionListener{
 		
 		liste = new JList(modele);
 		liste.setCellRenderer(renduCellule);
-		
+
 		Box hbox1 = Box.createHorizontalBox();
 		
 		JButton rafraichir = new JButton("Rafraichir la liste");
@@ -62,14 +62,13 @@ public class SelectionPartie extends JFrame  implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {		
 		if (e.getActionCommand().equals("Rafraichir la liste")) { //TODO moche
-			reseau.recupererParties(); //TODO Vérifier s'il ne peut pas y avoir un problème lors d'une latence trop élevée
-			rafraichir();
+			reseau.recupererParties();
 		}
 		// Rejoindre une partie
 		if (e.getActionCommand().equals("Se connecter") && liste.getSelectedIndices().length != 0) { //TODO moche
 			reseau.rejoindre(((Partie)modele.get(liste.getSelectedIndices()[0])).nom); //TODO Vérifier s'il ne peut pas y avoir un problème lors d'une latence trop élevée
-			this.setVisible(false);			
-			new FenetreJeu(reseau, this);
+			//this.setVisible(false);			
+			//new FenetreJeu(reseau, this);
 		}
 		// Créer une partie
 		if (e.getActionCommand().equals("Créer une partie")) { //TODO moche
@@ -87,5 +86,8 @@ public class SelectionPartie extends JFrame  implements ActionListener{
 		// Remplissage
 		for (Partie p : reseau.getParties())
 			modele.addElement(p);
+		
+		// Rafraichissement dans le cas où il n'y a pas de parties
+		liste.setModel(modele);
 	}
 }

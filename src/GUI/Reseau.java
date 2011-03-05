@@ -11,6 +11,7 @@ import java.util.Observable;
 import GUI.Joueur;
 import GUI.ListeJoueurs;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 import Jeu.Jeu;
@@ -28,7 +29,7 @@ public class Reseau extends Observable{
 	private SelectionPartie selectionPartie;
 	private	ArrayList<Partie> parties;	// Liste des parties
 	private FenetreJeu fenetreJeu;
-	private ListeJoueurs listeJoueurs;	// Liste des joueurs de la partie
+	private DefaultListModel listeJoueurs;	// Liste des joueurs de la partie
 	
 	/**
 	 * Constructeur
@@ -86,7 +87,7 @@ public class Reseau extends Observable{
 	private void requete(String req) {
 		if (req == null)
 			return;
-		System.out.println("##" + req + " | " + req.split(" ").length);
+		//System.out.println("##" + req + " | " + req.split(" ").length);
 		// Séparation des valeurs
 		String[] args = req.split(" ");
 		
@@ -94,7 +95,7 @@ public class Reseau extends Observable{
 			switch (Integer.parseInt(args[0])) {
 			// Jouer
 			case(2):
-				//System.out.println("A vous de jouer !");
+				System.out.println("A vous de jouer !");
 				curseur.setJouer(true);
 				break;			
 			// Envoyer son nom
@@ -149,11 +150,13 @@ public class Reseau extends Observable{
 			// Liste joueurs
 			case(10):				
 				joueurs = req.substring(4).split(";");
-				Joueur[] listeJoueurs = new Joueur[joueurs.length];
-				for (int i = 0 ; i < joueurs.length ; i++)
-					listeJoueurs[i] = new Joueur(i, joueurs[i]);
-				this.listeJoueurs.setListData(listeJoueurs);
-					
+				listeJoueurs.clear();
+				System.out.println("##########Joueurs");
+				for (int i = 0 ; i < joueurs.length ; i++) {
+					this.listeJoueurs.addElement(new Joueur(i + 1, (joueurCourant==i+1 ? "->" : "") + joueurs[i]));
+					System.out.println(joueurs[i] + " " + (i+1));
+				}
+				;				
 				break;
 			// Numéro dans le jeu
 			case(11):
@@ -191,7 +194,8 @@ public class Reseau extends Observable{
 					return;
 				joueurCourant = Integer.parseInt(args[1]);
 				System.out.println("->Le joueur courant est " + joueurs[Integer.parseInt(args[1]) - 1]);
-				this.listeJoueurs.setSelectedIndex(joueurCourant - 1);
+				//((Joueur) this.listeJoueurs.get(Integer.parseInt(args[1]) - 1)).nom = "->" + joueurs[Integer.parseInt(args[1]) - 1];
+				//this.fenetreJeu.repaint();
 				break;
 			// Récupérer la liste des parties
 			case(20):
@@ -208,10 +212,17 @@ public class Reseau extends Observable{
 				// Updater l'affichage
 				selectionPartie.rafraichir();
 				break;
+			// Rejoindre une partie
+			case(22):
+				envoyerNom();
+				selectionPartie.setVisible(false);
+				new FenetreJeu(this, selectionPartie);
+				break;
 			// Retourner à la liste de sélection de partie
 			case(23):
 				System.out.println("->Retour à la liste des parties");
 				fenetreJeu.retourListe();
+				recupererParties();
 				break;
 			default:
 				System.err.println("->Numéro de requête invalide : " + Integer.parseInt(args[0]));
@@ -359,7 +370,7 @@ public class Reseau extends Observable{
 		this.fenetreJeu = fenetreJeu;
 	}
 	
-	public void setListeJoueur(ListeJoueurs listeJoueurs) {
+	public void setListeJoueur(DefaultListModel listeJoueurs) {
 		this.listeJoueurs = listeJoueurs;
 	}	
 }

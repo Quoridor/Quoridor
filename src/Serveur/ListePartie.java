@@ -7,9 +7,6 @@ public class ListePartie extends Thread {
 	private ArrayList<Partie> parties = new ArrayList<Partie>();
 	private volatile ArrayList<Pipe> joueurs = new ArrayList<Pipe>();
 	
-	public ListePartie() {
-	}
-	
 	/**
 	 * Ajout d'un joueur qui se connecte pour la première fois
 	 * @param client
@@ -98,12 +95,16 @@ public class ListePartie extends Thread {
 				if (args.length < 2)
 					throw new Exception();				
 				for (int i = 0 ; i < parties.size() ; i++)
-					if (parties.get(i).nom.equals(req.substring(3)) && (parties.get(i).nbClients > parties.get(i).getConnectes())) {						
-						parties.get(i).addClient(joueurs.get(joueur));
-						joueurs.remove(joueurs.get(joueur));
+					if (parties.get(i).nom.equals(req.substring(3))) {						
+						// Si la partie commence
+						if (parties.get(i).addClient(joueurs.get(joueur)))
+							parties.remove(i);
+						// Dire au joueur qu'il est connecté
+						joueurs.get(joueur).client.setMessage("22");
+						// Enlever le joueur de la salle d'attente
+						joueurs.remove(joueurs.get(joueur));												
 						// Update de la liste pour les clients
 						rafraichirListe();
-						System.out.println("La partie " + parties.get(i).nom + " reçoit un nouveau client");
 						return;
 					}
 						

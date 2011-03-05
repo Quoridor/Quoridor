@@ -30,7 +30,7 @@ public class CellJoueur extends JLabel implements ListCellRenderer {
 		
 		//Partie partie = (Partie) obj;
 	    Joueur joueur = (Joueur) obj;
-	    if (!cellHasFocus) {
+	    if (!isSelected) {
 	    	setBackground(Color.GRAY);
 		}	
 	    else	    

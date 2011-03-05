@@ -3,7 +3,9 @@ package GUI;
 import java.awt.Toolkit;
 
 import javax.swing.Box;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import Jeu.Jeu;
@@ -17,6 +19,7 @@ import java.awt.event.WindowListener;
 public class FenetreJeu extends JFrame {
 	static final long serialVersionUID = 1;
 	private SelectionPartie parties;
+	private DefaultListModel modele;
 	
 	public FenetreJeu(final Reseau reseau, SelectionPartie parties) {
 		super();
@@ -36,16 +39,14 @@ public class FenetreJeu extends JFrame {
 		// Liste joueur		
 		Box lbox = Box.createVerticalBox();
 		lbox.setVisible(true);
-		ListeJoueurs ljoueurs = new ListeJoueurs();
-		ljoueurs.setVisible(true);
-		ljoueurs.setPreferredSize(new Dimension(50,50));
-		Joueur[] list = new Joueur[4];
-		list[0]=new Joueur(1,"paulo");
-		list[1]=new Joueur(2,"henri");
-		list[2]=new Joueur(3,"dominique");
-		list[3]=new Joueur(4,"heinrich");
-		ljoueurs.setListData(list);
-		hbox.add(ljoueurs); 
+		
+		modele = new DefaultListModel();
+		JList lJoueurs = new JList(modele);
+		lJoueurs.setCellRenderer(new CellJoueur());
+		lJoueurs.setSelectedIndex(0);
+		lJoueurs.setVisible(true);
+		lJoueurs.setPreferredSize(new Dimension(100,75));
+		hbox.add(lJoueurs); 
 		
 		// Ajout du controleur à reseau
 		reseau.setControleur(chat.getControleur());
@@ -54,7 +55,7 @@ public class FenetreJeu extends JFrame {
 		reseau.setFenetreJeu(this);
 		
 		// Ajout de la liste des joueurs
-		reseau.setListeJoueur(ljoueurs);
+		reseau.setListeJoueur(modele);
 		
 		Curseur grille = new Curseur(reseau);
 		grille.setPreferredSize(getMaximumSize());

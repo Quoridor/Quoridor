@@ -156,7 +156,7 @@ public class Curseur extends JPanel {
         // Affichage du jeu
         
         // Si le joueur qui doit jouer est nous on affiche les possibilités
-    	if (reseau.getJoueur() == reseau.getJoueurCourant()) {
+    	if (reseau.getJoueur() == reseau.getJoueurCourant() && actif) {
     		reseau.getJeu().miseAJourBis(reseau.getJeu().getListeJoueurs().get(reseau.getJoueur() - 1));
     		for (Case c : reseau.getJeu().getListeJoueurs().get(reseau.getJoueur() - 1).getListeCasesDepl()) {
     			couleurTransparente(g,reseau.getJoueur());
@@ -284,6 +284,7 @@ public class Curseur extends JPanel {
      * Fonction appelée par le réseau lorsque c'est à nous de jouer ou pas
      */
     public void setJouer(boolean b) {
+   		this.repaint();
     	actif = b;
     }
     
